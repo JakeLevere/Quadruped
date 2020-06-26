@@ -1,4 +1,4 @@
 # Quadruped Project
 
 
-![Image of Quad](Quadruped/quadmodel.png)
+![Image of Quad](https://raw.githubusercontent.com/JakeLevere/Quadruped/master/quadmodel.png)
