@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="FullAssemV2_URDF_2">
+  <link
+    name="Quadruped">
+    <inertial>
+      <origin
+        xyz="-0.0041553618219459 -0.000605328966400378 0.0150281265695418"
+        rpy="0 0 0" />
+      <mass
+        value="0.733926286831756" />
+      <inertia
+        ixx="0.000699148528206542"
+        ixy="5.93914839887286E-06"
+        ixz="3.16112670318621E-05"
+        iyy="0.00077173915562128"
+        iyz="-6.89408934064761E-06"
+        izz="0.000709070475520081" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_2/meshes/Quadruped.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_2/meshes/Quadruped.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>
