@@ -1,1 +1,0 @@
-URDF Folder for Gazebo
