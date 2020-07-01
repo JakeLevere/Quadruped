@@ -570,17 +570,17 @@
     name="Thigh4_Link">
     <inertial>
       <origin
-        xyz="0 0 0"
+        xyz="-0.046262 0.023725 0.0029163"
         rpy="0 0 0" />
       <mass
-        value="0" />
+        value="0.0539963764620715" />
       <inertia
-        ixx="0"
-        ixy="0"
-        ixz="0"
-        iyy="0"
-        iyz="0"
-        izz="0" />
+        ixx="2.1756E-05"
+        ixy="7.443E-06"
+        ixz="-2.6307E-08"
+        iyy="1.4122E-05"
+        iyz="-2.8382E-08"
+        izz="2.4984E-05" />
     </inertial>
     <visual>
       <origin
@@ -593,7 +593,7 @@
       <material
         name="">
         <color
-          rgba="1 1 1 1" />
+          rgba="0.75294 0.75294 0.75294 1" />
       </material>
     </visual>
     <collision>
