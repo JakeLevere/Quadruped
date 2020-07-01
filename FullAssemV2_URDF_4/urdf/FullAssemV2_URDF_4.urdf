@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="FullAssemV2_URDF_4">
+  <link
+    name="Quadruped">
+    <inertial>
+      <origin
+        xyz="-0.00015378 -0.0018543 0.0059831"
+        rpy="0 0 0" />
+      <mass
+        value="0.2498" />
+      <inertia
+        ixx="0.00027052"
+        ixy="-9.9718E-07"
+        ixz="-2.9032E-06"
+        iyy="0.00029671"
+        iyz="1.828E-06"
+        izz="0.00056127" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Quadruped.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Quadruped.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="Thigh1_Link">
+    <inertial>
+      <origin
+        xyz="-0.05457 0.014655 0.0029163"
+        rpy="0 0 0" />
+      <mass
+        value="0.053996" />
+      <inertia
+        ixx="1.2958E-05"
+        ixy="6.6702E-06"
+        ixz="-2.6124E-08"
+        iyy="2.2919E-05"
+        iyz="-2.8182E-08"
+        izz="2.4984E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Thigh1_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Thigh1_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Thigh1_Joint"
+    type="revolute">
+    <origin
+      xyz="-0.039065 -0.053882 0"
+      rpy="1.5708 0 0.098815" />
+    <parent
+      link="Quadruped" />
+    <child
+      link="Thigh1_Link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Shin1_Link">
+    <inertial>
+      <origin
+        xyz="0.089293 0.00052424 0.12407"
+        rpy="0 0 0" />
+      <mass
+        value="0.057893" />
+      <inertia
+        ixx="5.1911E-06"
+        ixy="-1.6884E-07"
+        ixz="-2.1135E-06"
+        iyy="9.8478E-05"
+        iyz="-1.0817E-08"
+        izz="9.4822E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Shin1_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Shin1_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Shin1_Joint"
+    type="revolute">
+    <origin
+      xyz="0 0.078226 0"
+      rpy="1.5708 0 -1.6593" />
+    <parent
+      link="Thigh1_Link" />
+    <child
+      link="Shin1_Link" />
+    <axis
+      xyz="0.99609 0 -0.088356" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Foot1_Link">
+    <inertial>
+      <origin
+        xyz="-0.0217800760075205 0.141583477691689 0.000158750549140413"
+        rpy="0 0 0" />
+      <mass
+        value="0.00914057897642938" />
+      <inertia
+        ixx="1.43388059300199E-06"
+        ixy="6.66353810967671E-08"
+        ixz="1.91616126822275E-14"
+        iyy="7.41969158641372E-07"
+        iyz="-1.28331133251381E-13"
+        izz="1.33502935768451E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Foot1_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Foot1_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="foot1_Joint"
+    type="revolute">
+    <origin
+      xyz="0.15134 0 -0.013424"
+      rpy="1.5708 -0.088471 -3.1416" />
+    <parent
+      link="Shin1_Link" />
+    <child
+      link="Foot1_Link" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Thigh2_Link">
+    <inertial>
+      <origin
+        xyz="-0.0428381524018848 0.0254412620695966 0.00291630750541005"
+        rpy="0 0 0" />
+      <mass
+        value="0.0539963748486514" />
+      <inertia
+        ixx="2.40390897727573E-05"
+        ixy="5.73770232855066E-06"
+        ixz="-2.63824184024176E-08"
+        iyy="1.18386855486503E-05"
+        iyz="-2.84200308039387E-08"
+        izz="2.49843293297085E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Thigh2_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Thigh2_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Thigh2_Joint"
+    type="revolute">
+    <origin
+      xyz="0.039065 -0.053882 0"
+      rpy="1.5708 0 2.2782" />
+    <parent
+      link="Quadruped" />
+    <child
+      link="Thigh2_Link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Shin2_Link">
+    <inertial>
+      <origin
+        xyz="-0.0296585034791133 0.000524244197710577 0.135544040173049"
+        rpy="0 0 0" />
+      <mass
+        value="0.0578934415117151" />
+      <inertia
+        ixx="5.18978396145588E-06"
+        ixy="-1.68960442129842E-07"
+        ixz="-2.11274764965037E-06"
+        iyy="9.84784530729361E-05"
+        iyz="-1.0888527999984E-08"
+        izz="9.48234932501909E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Shin2_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Shin2_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Shin2_Joint"
+    type="revolute">
+    <origin
+      xyz="0 -0.040937 0"
+      rpy="1.5708 0 -2.095" />
+    <parent
+      link="Thigh2_Link" />
+    <child
+      link="Shin2_Link" />
+    <axis
+      xyz="0.86575 0 -0.50048" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Foot2_Link">
+    <inertial>
+      <origin
+        xyz="0.00616009871733274 0.147432180380511 0.000158751367519597"
+        rpy="0 0 0" />
+      <mass
+        value="0.00914057905747705" />
+      <inertia
+        ixx="1.43388058850935E-06"
+        ixy="6.66354888171239E-08"
+        ixz="9.08725546167629E-14"
+        iyy="7.41969157898052E-07"
+        iyz="-1.18456942462896E-13"
+        izz="1.33502935366218E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Foot2_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Foot2_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Foot2_Joint"
+    type="revolute">
+    <origin
+      xyz="-0.0021858 0 0.0012636"
+      rpy="1.5708 -0.52416 3.1416" />
+    <parent
+      link="Shin2_Link" />
+    <child
+      link="Foot2_Link" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Thigh3_Link">
+    <inertial>
+      <origin
+        xyz="-0.0504817372319407 0.0203729902968304 0.00291630785274938"
+        rpy="0 0 0" />
+      <mass
+        value="0.0539963764620715" />
+      <inertia
+        ixx="1.78639039082575E-05"
+        ixy="8.34687131364102E-06"
+        ixz="-2.62138296252775E-08"
+        iyy="1.80138715206399E-05"
+        iyz="-2.83082687947387E-08"
+        izz="2.49843294019783E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Thigh3_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Thigh3_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Thigh3_Joint"
+    type="revolute">
+    <origin
+      xyz="0.039433 0.05348 0"
+      rpy="1.5708 0 -2.7838" />
+    <parent
+      link="Quadruped" />
+    <child
+      link="Thigh3_Link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Shin3_Link">
+    <inertial>
+      <origin
+        xyz="-0.0175951894874295 0.000524246245149712 0.161105963795723"
+        rpy="0 0 0" />
+      <mass
+        value="0.057893440995455" />
+      <inertia
+        ixx="5.19137301285778E-06"
+        ixy="-1.68786390238158E-07"
+        ixz="-2.11391528928266E-06"
+        iyy="9.84784530549523E-05"
+        iyz="-1.08004113969907E-08"
+        izz="9.48219041879124E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Shin3_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Shin3_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Shin3_Joint"
+    type="revolute">
+    <origin
+      xyz="0 -0.061738 0"
+      rpy="1.5708 0 -2.0801" />
+    <parent
+      link="Thigh3_Link" />
+    <child
+      link="Shin3_Link" />
+    <axis
+      xyz="0.87309 0 -0.48756" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Foot3_Link">
+    <inertial>
+      <origin
+        xyz="0.00616010644032098 0.175922034961037 0.000158757918696607"
+        rpy="0 0 0" />
+      <mass
+        value="0.00914057903727103" />
+      <inertia
+        ixx="1.43388054325383E-06"
+        ixy="6.66354691405119E-08"
+        ixz="4.07491870309494E-13"
+        iyy="7.41969110605252E-07"
+        iyz="-1.34870054730054E-13"
+        izz="1.33502935775728E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Foot3_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Foot3_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Foot3_Joint"
+    type="revolute">
+    <origin
+      xyz="-0.0020101 0 0.0011225"
+      rpy="1.5708 -0.5093 3.1416" />
+    <parent
+      link="Shin3_Link" />
+    <child
+      link="Foot3_Link" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Thigh4_Link">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0" />
+      <inertia
+        ixx="0"
+        ixy="0"
+        ixz="0"
+        iyy="0"
+        iyz="0"
+        izz="0" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Thigh4_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Thigh4_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Thigh4_Joint"
+    type="revolute">
+    <origin
+      xyz="-0.039433 0.05348 0"
+      rpy="1.5708 0 -0.47257" />
+    <parent
+      link="Quadruped" />
+    <child
+      link="Thigh4_Link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Shin4_Link">
+    <inertial>
+      <origin
+        xyz="-0.0698472499239852 0.000524248293319301 0.12515038497311"
+        rpy="0 0 0" />
+      <mass
+        value="0.0578934415358728" />
+      <inertia
+        ixx="5.18920740356159E-06"
+        ixy="-1.69002634475393E-07"
+        ixz="-2.11267767635326E-06"
+        iyy="9.84784530927473E-05"
+        iyz="-1.0925957137173E-08"
+        izz="9.48240698537139E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Shin4_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Shin4_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Shin4_Joint"
+    type="revolute">
+    <origin
+      xyz="0 -0.058914 0"
+      rpy="1.5708 0 -1.8089" />
+    <parent
+      link="Thigh4_Link" />
+    <child
+      link="Shin4_Link" />
+    <axis
+      xyz="0.9718 0 -0.23582" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Foot4_Link">
+    <inertial>
+      <origin
+        xyz="0.00616013961085539 0.127708470173728 0.000158743643449099"
+        rpy="0 0 0" />
+      <mass
+        value="0.00914057907848054" />
+      <inertia
+        ixx="1.43388047627197E-06"
+        ixy="6.66354983920581E-08"
+        ixz="-7.44155415370138E-13"
+        iyy="7.41969046146568E-07"
+        iyz="-1.09981926939391E-13"
+        izz="1.33502934802945E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Foot4_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://FullAssemV2_URDF_4/meshes/Foot4_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Foot4_Joint"
+    type="revolute">
+    <origin
+      xyz="0.0024137 0 -0.00058572"
+      rpy="1.5708 -0.23806 3.1416" />
+    <parent
+      link="Shin4_Link" />
+    <child
+      link="Foot4_Link" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>
