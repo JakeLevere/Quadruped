@@ -120,7 +120,13 @@ range_jt4_t1 = create_range(0, q(1,4),ndivisions, 5)
 range_jt4_t2 = create_range(0, q(2,4), ndivisions, 5)
 range_jt4_t3 = create_range(0, q(3,4), ndivisions, 5)
 
-
+range_jt11 = timetable(range_jt1_t2(2,:).', 'SampleRate', 10)
+range_jt12 = timetable(range_jt1_t2(2,:).', 'SampleRate', 10)
+range_jt13 = timetable(range_jt1_t3(2,:).', 'SampleRate', 10);
+%{
+range_jt2 = [range_jt2_t1(1,:); range_jt2_t1(2,:);range_jt2_t2(2,:);range_jt2_t3(2,:)];
+range_jt3 = [range_jt3_t1(1,:); range_jt3_t1(2,:);range_jt3_t2(2,:);range_jt3_t3(2,:)];
+range_jt4 = [range_jt4_t1(1,:); range_jt4_t1(2,:);range_jt4_t2(2,:);range_jt4_t3(2,:)];
 figure;
 hold on;
 plot(range_jt1_t1(1,:), range_jt1_t1(2,:))
@@ -136,16 +142,14 @@ plot(range_jt4_t1(1,:), range_jt4_t1(2,:))
 plot(range_jt4_t2(1,:), range_jt4_t2(2,:))
 plot(range_jt4_t3(1,:), range_jt4_t3(2,:))
 
-jt_angles = [range_jt1_t1(1,:); range_jt1_t1(2,:); range_jt1_t2(2,:); range_jt1_t3(2,:);...
-    range_jt2_t1(2,:); range_jt2_t2(2,:); range_jt2_t3(2,:);...
-    range_jt3_t1(2,:); range_jt3_t2(2,:); range_jt3_t3(2,:);...
-    range_jt4_t1(2,:); range_jt4_t2(2,:); range_jt4_t3(2,:)];
 
-save('Motion_ranges', 'jt_angles'); 
+save('Motion_ranges', 'range_jt1', 'range_jt2', 'range_jt3', 'range_jt4'); 
+%}
+
 %% Helper Function
 
 function range = create_range(startvalue, endvalue, ndivisions, duration)
-range = zeros(2, ndivisions);
+range = zeros(1, ndivisions);
 index = 1;
 
 range(1,:) = 0:duration/(ndivisions-1):duration;
@@ -153,18 +157,18 @@ range(1,:) = 0:duration/(ndivisions-1):duration;
 if startvalue > endvalue
     index = ndivisions;
     for i = endvalue:(startvalue-endvalue)/(ndivisions-1):startvalue
-       range(2,index) = i;
+       range(2, index) = i;
        index = index-1;
     end
 elseif startvalue < endvalue
     for i = startvalue:(endvalue-startvalue)/(ndivisions-1):endvalue
-       range(2,index) = i;
+       range(2, index) = i;
        index = index+1;
     end
     
 else %startvalue = endvalue
     for i = 1:ndivisions-1
-       range(2,i) = startvalue; 
+       range(2, i) = startvalue; 
     end
 end
 end
