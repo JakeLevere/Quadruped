@@ -108,18 +108,18 @@ plot3(s4_vector(1,:), s4_vector(2,:), s4_vector(3,:))
 %}
 %% Create "Joint" Range File
 ndivisions = 100;
-leg1_theta1 = create_range(0, q(1,1), ndivisions, 10);
-leg1_theta2 = create_range(0, q(2,1), ndivisions, 10);
-leg1_theta3 = create_range(0, q(3,1), ndivisions, 10);
-leg2_theta1 = create_range(0, q(1,2), ndivisions, 10);
-leg2_theta2 = create_range(0, q(2,2), ndivisions, 10);
-leg2_theta3 = create_range(0, q(3,2), ndivisions, 10);
-leg3_theta1 = create_range(0, q(1,3), ndivisions, 10);
-leg3_theta2 = create_range(0, q(2,3), ndivisions, 10);
-leg3_theta3 = create_range(0, q(3,3), ndivisions, 10);
-leg4_theta1 = create_range(0, q(1,4), ndivisions, 10);
-leg4_theta2 = create_range(0, q(2,4), ndivisions, 10);
-leg4_theta3 = create_range(0, q(3,4), ndivisions, 10);
+leg1_theta1 = create_range(0, q(1,1),ndivisions, 5, 10)
+leg1_theta2 = create_range(0, q(2,1), ndivisions, 5, 10)
+leg1_theta3 = create_range(0, q(3,1), ndivisions, 5, 10)
+leg2_theta1 = create_range(0, q(1,2),ndivisions, 5, 10)
+leg2_theta2 = create_range(0, q(2,2), ndivisions, 5, 10)
+leg2_theta3 = create_range(0, q(3,2), ndivisions, 5, 10)
+leg3_theta1 = create_range(0, q(1,3),ndivisions, 5, 10)
+leg3_theta2 = create_range(0, q(2,3), ndivisions, 5, 10)
+leg3_theta3 = create_range(0, q(3,3), ndivisions, 5)
+leg4_theta1 = create_range(0, q(1,4),ndivisions, 5)
+leg4_theta2 = create_range(0, q(2,4), ndivisions, 5)
+leg4_theta3 = create_range(0, q(3,4), ndivisions, 5)
 
 
 %% Helper Function
