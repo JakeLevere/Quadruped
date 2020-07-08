@@ -4,6 +4,7 @@
 o = [0; 4; 0];
 R = [1 0 0; 0 1 0; 0 0 1];
 
+rleg= 0.5;
 %% Constant Robot Parameters
 %Constants
 leg_min = 4.4434; % prismatic
@@ -44,6 +45,14 @@ end
 disp("Leg lengths are: ");
 disp(l);
 
+dist12 = abs(norm((si(:,1)) - (si(:,2))));
+dist23 = abs(norm((si(:,2)) - (si(:,3))));
+dist34 = abs(norm((si(:,3)) - (si(:,4))));
+dist41 = abs(norm((si(:,4)) - (si(:,1))));
+dist12 = 5;
+dist23 = 6.7;
+dist34 = 5;
+dist41 = 6.7;
 %% Find Joint Variables Theta1, Theta2, Theta3
 
 q = zeros(3, length(li));
@@ -59,7 +68,7 @@ end
 % Find Theta3
 for leg_num = 1:length(li)
     inside = (l(leg_num)^2 - thigh_length^2 - shin_length^2)/(-2*thigh_length*shin_length);
-    q(3,leg_num) = pi - acos(inside);
+    q(3,leg_num) = pi/2 - acos(inside);
 end
 
 disp("Joint Variables are: ");
