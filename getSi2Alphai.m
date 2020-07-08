@@ -1,0 +1,44 @@
+%% Get Si2 Function
+% this function gets the Si2 function for walking robot
+% this takes in RADIANS
+% L1 is the length of the coxa
+% Livect is the Li vector calculated from the invkin just from the parallel
+% robotics
+% returns the list of si2 vectors for each leg and the alpha matrix for all
+% the legs
+
+function [si2,alphai] = getSi2Alphai(si1,coxa,LiVect, isDeg)
+% Home angles
+theta1DegHome = 53.64;% degrees
+theta1RadHome = deg2rad(theta1DegHome);% radians
+theta2DegHome = 54.02;% degrees
+theta2RadHome = deg2rad(theta2DegHome);% radians
+
+si2 = zeros(3,length(si1));
+Alphai = zeros(1,length(si1));
+for i =1:length(si1)
+    if isDeg
+        Alphai(i) = atand(LiVect(2,i)/LiVect(1,i));
+        si2(:,i) = [si1(1,i)+((-1)^i)*coxa*cosd(Alphai(i));
+            si1(2,i)+((-1)^i)*coxa*sind(Alphai(i));
+            si1(3,i)];
+    else
+        Alphai(i) = atan(LiVect(2,i)/LiVect(1,i));
+        si2(:,i) = [si1(1,i)+((-1)^i)*coxa*cos(Alphai(i));
+            si1(2,i)+((-1)^i)*coxa*sin(Alphai(i));
+            si1(3,i)];
+    end
+end
+if isDeg
+    alphai(1) = round(Alphai(1)+theta1DegHome,6);
+    alphai(2) = round(Alphai(2)-theta1DegHome,6);
+    alphai(3) = round(Alphai(3)-theta2DegHome,6);
+    alphai(4) = round(Alphai(4)+theta2DegHome,6);
+else
+    alphai(1) = round(Alphai(1)+theta1RadHome,6);
+    alphai(2) = round(Alphai(2)-theta1RadHome,6);
+    alphai(3) = round(Alphai(3)-theta2RadHome,6);
+    alphai(4) = round(Alphai(4)+theta2RadHome,6);
+end
+
+end
