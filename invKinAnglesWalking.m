@@ -1,3 +1,12 @@
+%% invKinAnglesWalking Function
+% This function finds the rest of the angles of the joints needed for
+% inverse kinematics.
+% Given: Li_prime_vect = the set of vectors from the foot tip to the knee
+% joints, Li_prime_mag = the magnitude of the vector, Li_vect= the initial
+% Li vector, the link lengths (coxa,femur,tibia) and boolean true if using
+% degrees, false if radians
+% Result: Beta, gamma, lamda, phi, and rho values for each leg.
+
 function [betai,gammai,lamdai,phii,rhoi] = invKinAnglesWalking(Li_prime_vect, Li_prime_mag,Li_vect,coxa,femur,tibia, isDeg)
 numLegs = length(Li_prime_vect);
 betai = zeros(1,numLegs);
@@ -33,4 +42,14 @@ for i = 1:numLegs
         lamdai(i) = acos(lamda_num/lamda_denom);
     end
 end
+if any(gammai<0)
+   error('Gamma cannot be less than 0');
+end
+
+% check if there is an imaginary/complex number
+allAngles =  [phii;rhoi;betai;gammai;lamdai];
+if ~isreal(allAngles)
+    error('Angles have complex numbers. Try different position. Might be close to a Singularity');
+end
+
 end

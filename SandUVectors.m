@@ -28,5 +28,4 @@ U2=[botR*cosTheta1; botR*sinTheta1;0];
 U3=[-botR*cosTheta2;-botR*sinTheta2;0];
 U4=[botR*cosTheta2; -botR*sinTheta2;0];
 U = [U1,U2,U3,U4];
-
 end
