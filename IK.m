@@ -37,6 +37,17 @@ ui = (bot_diam/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
     -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
 li = o + (R*si) - ui;
 
+
+
+uitest = ((top_diam+(2*hip_length)+(2*thigh_length))/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
+    0 0 0 0;
+    -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
+
+u1 = uitest(:,1);
+u2 = uitest(:,2);
+u3 = uitest(:,3);
+u4 = uitest(:,4);
+
 l = zeros(1,length(li));
 for leg_num = 1:length(li)
     l(leg_num) = norm(li(:,leg_num));
@@ -49,10 +60,10 @@ dist12 = abs(norm((si(:,1)) - (si(:,2))));
 dist23 = abs(norm((si(:,2)) - (si(:,3))));
 dist34 = abs(norm((si(:,3)) - (si(:,4))));
 dist41 = abs(norm((si(:,4)) - (si(:,1))));
-dist12 = 5;
-dist23 = 6.7;
-dist34 = 5;
-dist41 = 6.7;
+%dist12 = 5;
+%dist23 = 6.7;
+%dist34 = 5;
+%dist41 = 6.7;
 %% Find Joint Variables Theta1, Theta2, Theta3
 
 q = zeros(3, length(li));
@@ -68,7 +79,7 @@ end
 % Find Theta3
 for leg_num = 1:length(li)
     inside = (l(leg_num)^2 - thigh_length^2 - shin_length^2)/(-2*thigh_length*shin_length);
-    q(3,leg_num) = pi/2 - acos(inside);
+    q(3,leg_num) = acos(inside)- pi/2;
 end
 
 disp("Joint Variables are: ");
