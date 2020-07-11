@@ -24,32 +24,33 @@ beta = 54.02 * ((2*pi)/360);
 
 bot_diam = 16.05;
 
-% Effective Top Diameter - Theta1i = 0, placing the hips inline with si
+%% Find si and ui matrix
+botR = thigh_length+hip_length+topR
 
-effective_top_diam = top_diam + (2 * hip_length);
+[s, u] = SandUVectors(topR, botR, theta1RadHome, theta1RadHome, false);
+dist12 = abs(norm((s(:,1)) - (s(:,2))));
+dist24 = abs(norm((s(:,2)) - (s(:,4))));
+dist34 = abs(norm((s(:,3)) - (s(:,4))));
+dist31 = abs(norm((s(:,3)) - (s(:,1))));
 
-%% Find li matrix
+% U vector
+u1 = u(:,1);
+u2 = u(:,2);
+u3 = u(:,3);
+u4 = u(:,4);
 
-si = (effective_top_diam/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
-    0 0 0 0;
-    -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
-ui = (bot_diam/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
-    0 0 0 0;
-    -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
-li = o + (R*si) - ui;
+%% Create Angle ranges
 
-
-
-uitest = ((top_diam+(2*hip_length)+(2*thigh_length))/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
-    0 0 0 0;
-    -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
-
-u1 = uitest(:,1);
-u2 = uitest(:,2);
-u3 = uitest(:,3);
-u4 = uitest(:,4);
-
-dist12 = abs(norm((si(:,1)) - (si(:,2))));
-dist23 = abs(norm((si(:,2)) - (si(:,3))));
-dist34 = abs(norm((si(:,3)) - (si(:,4))));
-dist41 = abs(norm((si(:,4)) - (si(:,1))));
+ndivisions = 100;
+leg1_alpha = create_range(0, alphai(1), ndivisions, 10);
+leg1_beta = create_range(0, betai(1), ndivisions, 10);
+leg1_gamma = create_range(0, gammai(1)-90, ndivisions, 10);
+leg2_alpha = create_range(0, alphai(2), ndivisions, 10);
+leg2_beta = create_range(0, betai(2), ndivisions, 10);
+leg2_gamma = create_range(0, gammai(2)-90, ndivisions, 10);
+leg3_alpha = create_range(0, alphai(3), ndivisions, 10);
+leg3_beta = create_range(0, betai(3), ndivisions, 10);
+leg3_gamma = create_range(0, gammai(3)-90, ndivisions, 10);
+leg4_alpha =create_range(0, alphai(4), ndivisions, 10);
+leg4_beta = create_range(0, betai(4), ndivisions, 10);
+leg4_gamma = create_range(0, gammai(4)-90, ndivisions, 10);

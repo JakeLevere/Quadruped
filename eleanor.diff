@@ -1,0 +1,318 @@
+diff --git a/IK.m b/IK.m
+new file mode 100644
+index 0000000..830a735
+--- /dev/null
++++ b/IK.m
+@@ -0,0 +1,170 @@
++%% Inverse Kinematics for Spider Quadruped Robot
++
++%% "Given" Information
++o = [0; 4; 0];
++R = [1 0 0; 0 1 0; 0 0 1];
++
++rleg= 0.5;
++%% Constant Robot Parameters
++%Constants
++leg_min = 4.4434; % prismatic
++leg_max = 9.0552; % prismatic
++
++top_diam = 5.23;
++shin_length = 5.7477;
++thigh_length = 3.4638;
++hip_length = 1.5374;
++alpha = 53.64 * ((2*pi)/360);
++beta = 54.02 * ((2*pi)/360);
++
++%% Parameters of the home position
++% Assume the robot is moved into home position to satisfy these conditions
++% before performing any parallel motion
++
++bot_diam = 16.05;
++
++% Effective Top Diameter - Theta1i = 0, placing the hips inline with si
++
++effective_top_diam = top_diam + (2 * hip_length);
++
++%% Find li matrix
++
++si = (effective_top_diam/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
++    0 0 0 0;
++    -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
++ui = (bot_diam/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
++    0 0 0 0;
++    -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
++li = o + (R*si) - ui;
++
++
++
++uitest = ((top_diam+(2*hip_length)+(2*thigh_length))/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
++    0 0 0 0;
++    -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
++
++u1 = uitest(:,1);
++u2 = uitest(:,2);
++u3 = uitest(:,3);
++u4 = uitest(:,4);
++
++l = zeros(1,length(li));
++for leg_num = 1:length(li)
++    l(leg_num) = norm(li(:,leg_num));
++end
++
++disp("Leg lengths are: ");
++disp(l);
++
++dist12 = abs(norm((si(:,1)) - (si(:,2))));
++dist23 = abs(norm((si(:,2)) - (si(:,3))));
++dist34 = abs(norm((si(:,3)) - (si(:,4))));
++dist41 = abs(norm((si(:,4)) - (si(:,1))));
++%dist12 = 5;
++%dist23 = 6.7;
++%dist34 = 5;
++%dist41 = 6.7;
++%% Find Joint Variables Theta1, Theta2, Theta3
++
++q = zeros(3, length(li));
++
++
++% Find Theta2
++for leg_num = 1:length(li)
++    gamma = pi - acos((dot(si(:,leg_num), li(:,leg_num)))/(norm(si(:,leg_num))*norm(li(:,leg_num))));
++    inside = (shin_length^2 - thigh_length^2 - l(leg_num)^2)/(-2*thigh_length*l(leg_num));
++    q(2,leg_num) = acos(inside) - gamma;
++end
++
++% Find Theta3
++for leg_num = 1:length(li)
++    inside = (l(leg_num)^2 - thigh_length^2 - shin_length^2)/(-2*thigh_length*shin_length);
++    q(3,leg_num) = acos(inside)- pi/2;
++end
++
++disp("Joint Variables are: ");
++disp(q);
++
++%% Plot the configuration
++%{
++hold on;
++
++% Plot the XYZ and xyz origin
++plot3(0,0,0,'o');
++plot3(o(1), o(2), o(3),'o');
++
++% Label the axis
++xlabel('X');
++ylabel('Y');
++zlabel('Z');
++axis equal;
++
++% Plot the bot_diam circle
++foot_circle_x = [bot_diam/2*cos(0:(2*pi)/5000: 2*pi).'];
++foot_circle_z = [bot_diam/2*sin(0:(2*pi)/5000: 2*pi).'];
++foot_circle = [foot_circle_x  zeros(length(foot_circle_x),1) foot_circle_z];
++plot3(foot_circle(:,1), foot_circle(:,2), foot_circle(:,3));
++
++
++% Plot the length vectors
++si = R.'*ui + o
++l1_vector = [ui(:,1) si(:,1)];
++l2_vector = [ui(:,2) si(:,2)];
++l3_vector = [ui(:,3) si(:,3)];
++l4_vector = [ui(:,4) si(:,4)];
++s1_vector = [o, si(:,1)];
++s2_vector = [o, si(:,2)];
++s3_vector = [o, si(:,3)];
++s4_vector = [o, si(:,4)];
++
++plot3(l1_vector(1,:), l1_vector(2,:), l1_vector(3,:))
++plot3(l2_vector(1,:), l2_vector(2,:), l2_vector(3,:))
++plot3(l3_vector(1,:), l3_vector(2,:), l3_vector(3,:))
++plot3(l4_vector(1,:), l4_vector(2,:), l4_vector(3,:))
++plot3(s1_vector(1,:), s1_vector(2,:), s1_vector(3,:))
++plot3(s2_vector(1,:), s2_vector(2,:), s2_vector(3,:))
++plot3(s3_vector(1,:), s3_vector(2,:), s3_vector(3,:))
++plot3(s4_vector(1,:), s4_vector(2,:), s4_vector(3,:))
++%}
++%% Create "Joint" Range File
++ndivisions = 100;
++leg1_theta1 = create_range(0, q(1,1), ndivisions, 10);
++leg1_theta2 = create_range(0, q(2,1), ndivisions, 10);
++leg1_theta3 = create_range(0, q(3,1), ndivisions, 10);
++leg2_theta1 = create_range(0, q(1,2), ndivisions, 10);
++leg2_theta2 = create_range(0, q(2,2), ndivisions, 10);
++leg2_theta3 = create_range(0, q(3,2), ndivisions, 10);
++leg3_theta1 = create_range(0, q(1,3), ndivisions, 10);
++leg3_theta2 = create_range(0, q(2,3), ndivisions, 10);
++leg3_theta3 = create_range(0, q(3,3), ndivisions, 10);
++leg4_theta1 = create_range(0, q(1,4), ndivisions, 10);
++leg4_theta2 = create_range(0, q(2,4), ndivisions, 10);
++leg4_theta3 = create_range(0, q(3,4), ndivisions, 10);
++
++
++%% Helper Function
++
++function timetbl = create_range(startvalue, endvalue, ndivisions, rate)
++range = zeros(1, ndivisions);
++index = 1;
++
++if startvalue > endvalue
++    index = ndivisions;
++    for i = endvalue:(startvalue-endvalue)/(ndivisions-1):startvalue
++       range(index) = i;
++       index = index-1;
++    end
++elseif startvalue < endvalue
++    for i = startvalue:(endvalue-startvalue)/(ndivisions-1):endvalue
++       range(index) = i;
++       index = index+1;
++    end
++    
++else %startvalue = endvalue
++    for i = 1:ndivisions-1
++       range(i) = startvalue; 
++    end
++end
++
++timetbl = timetable(range.', 'SampleRate', 10)
++end
+\ No newline at end of file
+diff --git a/Quadruped_Simulink.slx b/Quadruped_Simulink.slx
+deleted file mode 100644
+index 704a824..0000000
+Binary files a/Quadruped_Simulink.slx and /dev/null differ
+diff --git a/Simulink/FootModel.slx b/Simulink/FootModel.slx
+new file mode 100644
+index 0000000..1abfcbf
+Binary files /dev/null and b/Simulink/FootModel.slx differ
+diff --git a/Simulink/Quadruped_SimulinkV2.slx b/Simulink/Quadruped_SimulinkV2.slx
+new file mode 100644
+index 0000000..b899bdf
+Binary files /dev/null and b/Simulink/Quadruped_SimulinkV2.slx differ
+diff --git a/Simulink/Quadruped_Simulink_Parallel.slx b/Simulink/Quadruped_Simulink_Parallel.slx
+new file mode 100644
+index 0000000..5cdb988
+Binary files /dev/null and b/Simulink/Quadruped_Simulink_Parallel.slx differ
+diff --git a/Simulink/RobotParams.m b/Simulink/RobotParams.m
+new file mode 100644
+index 0000000..050e350
+--- /dev/null
++++ b/Simulink/RobotParams.m
+@@ -0,0 +1,55 @@
++%% Simulink Parameters
++
++%% "Given" Information
++o = [0; 4; 0];
++R = [1 0 0; 0 1 0; 0 0 1];
++
++rleg= 0.5;
++
++% Constant Robot Parameters
++%Constants
++leg_min = 4.4434; % prismatic
++leg_max = 9.0552; % prismatic
++
++top_diam = 5.23;
++shin_length = 5.7477;
++thigh_length = 3.4638;
++hip_length = 1.5374;
++alpha = 53.64 * ((2*pi)/360);
++beta = 54.02 * ((2*pi)/360);
++
++%% Parameters of the home position
++% Assume the robot is moved into home position to satisfy these conditions
++% before performing any parallel motion
++
++bot_diam = 16.05;
++
++% Effective Top Diameter - Theta1i = 0, placing the hips inline with si
++
++effective_top_diam = top_diam + (2 * hip_length);
++
++%% Find li matrix
++
++si = (effective_top_diam/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
++    0 0 0 0;
++    -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
++ui = (bot_diam/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
++    0 0 0 0;
++    -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
++li = o + (R*si) - ui;
++
++
++
++uitest = ((top_diam+(2*hip_length)+(2*thigh_length))/2) * [cos(alpha) -cos(alpha) -cos(beta) cos(beta);
++    0 0 0 0;
++    -sin(alpha) -sin(alpha) sin(beta) sin(beta)];
++
++u1 = uitest(:,1);
++u2 = uitest(:,2);
++u3 = uitest(:,3);
++u4 = uitest(:,4);
++
++dist12 = abs(norm((si(:,1)) - (si(:,2))));
++dist23 = abs(norm((si(:,2)) - (si(:,3))));
++dist34 = abs(norm((si(:,3)) - (si(:,4))));
++dist41 = abs(norm((si(:,4)) - (si(:,1))));
+\ No newline at end of file
+diff --git a/slprj/sim/varcache/Quadruped_Simulink/checksumOfCache.mat b/slprj/sim/varcache/Quadruped_Simulink/checksumOfCache.mat
+new file mode 100644
+index 0000000..635ca25
+Binary files /dev/null and b/slprj/sim/varcache/Quadruped_Simulink/checksumOfCache.mat differ
+diff --git a/slprj/sim/varcache/Quadruped_Simulink/tmwinternal/simulink_cache.xml b/slprj/sim/varcache/Quadruped_Simulink/tmwinternal/simulink_cache.xml
+new file mode 100644
+index 0000000..08c96ed
+--- /dev/null
++++ b/slprj/sim/varcache/Quadruped_Simulink/tmwinternal/simulink_cache.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<MF0 version="1.1" packageUris="http://schema.mathworks.com/mf0/SlCache/19700101">
++  <slcache.FileAttributes type="slcache.FileAttributes" uuid="a4eb75a0-511a-4303-aed4-8f6e4a095a7c">
++    <checksum>lTDpkRG8/n9268GKYV35YA==</checksum>
++  </slcache.FileAttributes>
++</MF0>
+\ No newline at end of file
+diff --git a/slprj/sim/varcache/Quadruped_Simulink/varInfo.mat b/slprj/sim/varcache/Quadruped_Simulink/varInfo.mat
+new file mode 100644
+index 0000000..f089618
+Binary files /dev/null and b/slprj/sim/varcache/Quadruped_Simulink/varInfo.mat differ
+diff --git a/slprj/sim/varcache/Quadruped_SimulinkV2/checksumOfCache.mat b/slprj/sim/varcache/Quadruped_SimulinkV2/checksumOfCache.mat
+new file mode 100644
+index 0000000..d20d352
+Binary files /dev/null and b/slprj/sim/varcache/Quadruped_SimulinkV2/checksumOfCache.mat differ
+diff --git a/slprj/sim/varcache/Quadruped_SimulinkV2/tmwinternal/simulink_cache.xml b/slprj/sim/varcache/Quadruped_SimulinkV2/tmwinternal/simulink_cache.xml
+new file mode 100644
+index 0000000..a593056
+--- /dev/null
++++ b/slprj/sim/varcache/Quadruped_SimulinkV2/tmwinternal/simulink_cache.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<MF0 version="1.1" packageUris="http://schema.mathworks.com/mf0/SlCache/19700101">
++  <slcache.FileAttributes type="slcache.FileAttributes" uuid="efc0d9d6-9055-4346-bd89-095ec0f1fc0d">
++    <checksum>sOtEXj5wavrw009dXBRQdw==</checksum>
++  </slcache.FileAttributes>
++</MF0>
+\ No newline at end of file
+diff --git a/slprj/sim/varcache/Quadruped_SimulinkV2/varInfo.mat b/slprj/sim/varcache/Quadruped_SimulinkV2/varInfo.mat
+new file mode 100644
+index 0000000..3236787
+Binary files /dev/null and b/slprj/sim/varcache/Quadruped_SimulinkV2/varInfo.mat differ
+diff --git a/slprj/sim/varcache/Quadruped_Simulink_Parallel/checksumOfCache.mat b/slprj/sim/varcache/Quadruped_Simulink_Parallel/checksumOfCache.mat
+new file mode 100644
+index 0000000..8aeddc1
+Binary files /dev/null and b/slprj/sim/varcache/Quadruped_Simulink_Parallel/checksumOfCache.mat differ
+diff --git a/slprj/sim/varcache/Quadruped_Simulink_Parallel/tmwinternal/simulink_cache.xml b/slprj/sim/varcache/Quadruped_Simulink_Parallel/tmwinternal/simulink_cache.xml
+new file mode 100644
+index 0000000..a301000
+--- /dev/null
++++ b/slprj/sim/varcache/Quadruped_Simulink_Parallel/tmwinternal/simulink_cache.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<MF0 version="1.1" packageUris="http://schema.mathworks.com/mf0/SlCache/19700101">
++  <slcache.FileAttributes type="slcache.FileAttributes" uuid="efcb0252-8663-47c3-bfdc-1ea97c0bb77b">
++    <checksum>LpaH4idI4ln+DcLX0kxW7g==</checksum>
++  </slcache.FileAttributes>
++</MF0>
+\ No newline at end of file
+diff --git a/slprj/sim/varcache/Quadruped_Simulink_Parallel/varInfo.mat b/slprj/sim/varcache/Quadruped_Simulink_Parallel/varInfo.mat
+new file mode 100644
+index 0000000..4a2e048
+Binary files /dev/null and b/slprj/sim/varcache/Quadruped_Simulink_Parallel/varInfo.mat differ
