@@ -1,9 +1,6 @@
 %% Simulink Parameters
 
 %% "Given" Information
-o = [0; 4; 0];
-R = [1 0 0; 0 1 0; 0 0 1];
-
 rleg= 0.5;
 
 % Constant Robot Parameters
@@ -25,7 +22,7 @@ beta = 54.02 * ((2*pi)/360);
 bot_diam = 16.05;
 
 %% Find si and ui matrix
-botR = thigh_length+hip_length+topR
+botR = (thigh_length)+hip_length+topR
 
 [s, u] = SandUVectors(topR, botR, theta1RadHome, theta1RadHome, false);
 dist12 = abs(norm((s(:,1)) - (s(:,2))));
@@ -46,7 +43,7 @@ leg1_alpha = create_range(0, alphai(1), ndivisions, 10);
 leg1_beta = create_range(0, betai(1), ndivisions, 10);
 leg1_gamma = create_range(0, gammai(1)-90, ndivisions, 10);
 leg2_alpha = create_range(0, alphai(2), ndivisions, 10);
-leg2_beta = create_range(0, betai(2), ndivisions, 10);
+leg2_beta = create_range(0, betai, ndivisions, 10);
 leg2_gamma = create_range(0, gammai(2)-90, ndivisions, 10);
 leg3_alpha = create_range(0, alphai(3), ndivisions, 10);
 leg3_beta = create_range(0, betai(3), ndivisions, 10);
@@ -54,3 +51,4 @@ leg3_gamma = create_range(0, gammai(3)-90, ndivisions, 10);
 leg4_alpha =create_range(0, alphai(4), ndivisions, 10);
 leg4_beta = create_range(0, betai(4), ndivisions, 10);
 leg4_gamma = create_range(0, gammai(4)-90, ndivisions, 10);
+leg1_rholambda = create_range(0, rhoi(1)+lamdai(1)-90, ndivisions, 10);
