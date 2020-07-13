@@ -23,7 +23,7 @@ for i = 1:numLegs
     beta_num = femur^2+Li_prime_mag(i)^2-tibia^2; % not sure if this is magnitute of Liprime or should be like rho_denom;
     beta_denom = 2*femur*Li_prime_mag(i);
     
-    gamma_num = femur^3+tibia^2-Li_prime_mag(i)^2;
+    gamma_num = femur^2+tibia^2-Li_prime_mag(i)^2;
     gamma_denom = 2*femur*tibia;
     
     lamda_num = Li_prime_mag(i)^2+tibia^2-femur^2;

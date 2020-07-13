@@ -25,7 +25,7 @@ tibiaL3 = 5.7477;
 
 % Platform diamters/Radii
 top_diam = 5.23;
-bot_diam = 16.05;
+bot_diam = top_diam+(2*(coxaL1+femurL2));
 topR = top_diam/2;
 botR = bot_diam/2;
 
@@ -58,9 +58,7 @@ Gammai=gammai;
 [hipJntPos,kneeJntPos,ankleJntPos] = getLegJointPos(Li_vect, Li_prime_vect, U, theta1Home,theta2Home, alphai, betai, phii,femurL2, isDeg);
 
 %% plotting
-goalPoseString = mat2str(goalPose);
-titleName = strcat('Walking Robot Stickplot at: ',goalPoseString);
-fig = figure('Name', titleName);
+fig = figure('Name', 'Stickplot of Walking Robot');
 plot3(0,0,0,'*k') % origin
 hold on
 plot3(goalPose(1),goalPose(2),goalPose(3),'*g') % goal pose
@@ -118,6 +116,6 @@ zlim([0,10])
 xlabel('X Position (in)');
 zlabel('Z Position (in)');
 ylabel('Y Position (in)');
-title(titleName)
+title('Stickplot of Walking Robot')
 
 end

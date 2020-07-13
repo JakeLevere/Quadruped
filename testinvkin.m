@@ -22,5 +22,5 @@ saveas(fig4,'Parallel Movement Pose 0-2-5--5-5--45','png');
 saveas(fig5,'Parallel Movement Pose 1-0_5-4_9-0-0-45','png');
 
 % Rotation 3 Position
-[Alphai6,Betai6,Gammai6,fig6] = InverseKinematicsParallelWalking([3;0;6;-15;25;0], 'XYZ', true)
-saveas(fig6,'Parallel Movement Pose 3-0-6--15-25-0','png');
+[Alphai6,Betai6,Gammai6,fig6] = InverseKinematicsParallelWalking([2.5;0;6;-15;25;0], 'XYZ', true)
+saveas(fig6,'Parallel Movement Pose 2_5-0-6--15-25-0','png');
