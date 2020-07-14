@@ -51,22 +51,11 @@ end
 % listOfAnkleJntPos = [];
 
 % joint positions for each leg
-% Leg 1
-listOfHipJntPosLeg1 = zeros(3,length(listOfPoses));
-listOfKneeJntPosLeg1 = zeros(3,length(listOfPoses));
-listOfAnkleJntPosLeg1 = zeros(3,length(listOfPoses));
-% Leg 2
-listOfHipJntPosLeg2 = zeros(3,length(listOfPoses));
-listOfKneeJntPosLeg2 = zeros(3,length(listOfPoses));
-listOfAnkleJntPosLeg2 = zeros(3,length(listOfPoses));
-% Leg 3
-listOfHipJntPosLeg3 = zeros(3,length(listOfPoses));
-listOfKneeJntPosLeg3 = zeros(3,length(listOfPoses));
-listOfAnkleJntPosLeg3 = zeros(3,length(listOfPoses));
-% Leg 4
-listOfHipJntPosLeg4 = zeros(3,length(listOfPoses));
-listOfKneeJntPosLeg4 = zeros(3,length(listOfPoses));
-listOfAnkleJntPosLeg4 = zeros(3,length(listOfPoses));
+% rows 1:3 are hip, 4:6 are knee, 7:9 are ankle
+listOfJntPosLeg1 = zeros(9,length(listOfPoses));
+listOfJntPosLeg2 = zeros(9,length(listOfPoses));
+listOfJntPosLeg3 = zeros(9,length(listOfPoses));
+listOfJntPosLeg4 = zeros(9,length(listOfPoses));
 
 
 % each row is a position, each column is a leg
@@ -80,31 +69,37 @@ for i = 1:length(listOfPoses)
     allAlphai(i,:) = AlphaiCurr;
     allBetai(i,:) = BetaiCurr;
     allGammai(i,:) = GammaiCurr;
+    
     % get  alist of points the joints will be at in space for plotting
     % Leg 1 joints
-    listOfHipJntPosLeg1(:,i) = hipJntPosCurr(:,1);
-    listOfKneeJntPosLeg1(:,i)  = kneeJntPosCurr(:,1);
-    listOfAnkleJntPosLeg1(:,i)  = ankleJntPosCurr(:,1);
+    listOfJntPosLeg1(1:3,i) = hipJntPosCurr(:,1);
+    listOfJntPosLeg1(4:6,i)  = kneeJntPosCurr(:,1);
+    listOfJntPosLeg1(7:9,i)  = ankleJntPosCurr(:,1);
+    
     % Leg 2 joints
-    listOfHipJntPosLeg2(:,i) = hipJntPosCurr(:,2);
-    listOfKneeJntPosLeg2(:,i)  = kneeJntPosCurr(:,2);
-    listOfAnkleJntPosLeg2(:,i)  = ankleJntPosCurr(:,2);
+    listOfJntPosLeg2(1:3,i) = hipJntPosCurr(:,2);
+    listOfJntPosLeg2(4:6,i)  = kneeJntPosCurr(:,2);
+    listOfJntPosLeg2(7:9,i)  = ankleJntPosCurr(:,2);
+    
     % Leg 3 joints
-    listOfHipJntPosLeg3(:,i) = hipJntPosCurr(:,3);
-    listOfKneeJntPosLeg3(:,i)  = kneeJntPosCurr(:,3);
-    listOfAnkleJntPosLeg3(:,i)  = ankleJntPosCurr(:,3);
+    listOfJntPosLeg3(1:3,i) = hipJntPosCurr(:,3);
+    listOfJntPosLeg3(4:6,i)  = kneeJntPosCurr(:,3);
+    listOfJntPosLeg3(7:9,i)  = ankleJntPosCurr(:,3);
+    
     % Leg 4 joints
-    listOfHipJntPosLeg4(:,i) = hipJntPosCurr(:,4);
-    listOfKneeJntPosLeg4(:,i)  = kneeJntPosCurr(:,4);
-    listOfAnkleJntPosLeg4(:,i)  = ankleJntPosCurr(:,4);
+    listOfJntPosLeg4(1:3,i) = hipJntPosCurr(:,4);
+    listOfJntPosLeg4(4:6,i)  = kneeJntPosCurr(:,4);
+    listOfJntPosLeg4(7:9,i)  = ankleJntPosCurr(:,4);
+    
 end
 
-
+% plot animation
 fig = figure('Name', 'Animated of Walking Robot');
 grid on
 xlim([-10,10])
 ylim([-10,10])
 zlim([0,10])
+hold on
 xlabel('X Position (in)');
 zlabel('Z Position (in)');
 ylabel('Y Position (in)');
@@ -114,61 +109,125 @@ view(30,45);
 
 trajectLine = animatedline('Color','m');
 for i=1:length(trajectPositions)
+    %% plot the trajectory
     currPos = trajectPositions(:,i); % plot the trajectory
-    addpoints(trajectLine,currPos(1),currPos(2),currPos(3));% plot the trajectory
+    addpoints(trajectLine,currPos(1),currPos(2),currPos(3));
+    
+    %% Plot joint and feet points in space
+    % Front legs are light blue, back are dark blue
+    
+    % Leg 1
+    currHipJntPointLeg1=scatter3(listOfJntPosLeg1(1,i),listOfJntPosLeg1(2,i),listOfJntPosLeg1(3,i),'MarkerFaceColor','c');
+    currKneeJntPointLeg1=scatter3(listOfJntPosLeg1(4,i),listOfJntPosLeg1(5,i),listOfJntPosLeg1(6,i),'MarkerFaceColor','c');
+    currAnkleJntPointLeg1=scatter3(listOfJntPosLeg1(7,i),listOfJntPosLeg1(8,i),listOfJntPosLeg1(9,i),'MarkerFaceColor','c');
+    % Leg 2
+    currHipJntPointLeg2=scatter3(listOfJntPosLeg2(1,i),listOfJntPosLeg2(2,i),listOfJntPosLeg2(3,i),'MarkerFaceColor','c');
+    currKneeJntPointLeg2=scatter3(listOfJntPosLeg2(4,i),listOfJntPosLeg2(5,i),listOfJntPosLeg2(6,i),'MarkerFaceColor','c');
+    currAnkleJntPointLeg2=scatter3(listOfJntPosLeg2(7,i),listOfJntPosLeg2(8,i),listOfJntPosLeg2(9,i),'MarkerFaceColor','c');
+    
+    % Leg 3
+    currHipJntPointLeg3=scatter3(listOfJntPosLeg3(1,i),listOfJntPosLeg3(2,i),listOfJntPosLeg3(3,i),'MarkerFaceColor','b');
+    currKneeJntPointLeg3=scatter3(listOfJntPosLeg3(4,i),listOfJntPosLeg3(5,i),listOfJntPosLeg3(6,i),'MarkerFaceColor','b');
+    currAnkleJntPointLeg3=scatter3(listOfJntPosLeg3(7,i),listOfJntPosLeg3(8,i),listOfJntPosLeg3(9,i),'MarkerFaceColor','b');
+    
+    % Leg 4
+    currHipJntPointLeg4=scatter3(listOfJntPosLeg4(1,i),listOfJntPosLeg4(2,i),listOfJntPosLeg4(3,i),'MarkerFaceColor','b');
+    currKneeJntPointLeg4=scatter3(listOfJntPosLeg4(4,i),listOfJntPosLeg4(5,i),listOfJntPosLeg4(6,i),'MarkerFaceColor','b');
+    currAnkleJntPointLeg4=scatter3(listOfJntPosLeg4(7,i),listOfJntPosLeg4(8,i),listOfJntPosLeg4(9,i),'MarkerFaceColor','b');
+    
+    % Feet - putting this in here, might be useful once we start moving the
+    % legs and feet as well
+    feetPosLeg1 = scatter3(UHome(1,1),UHome(2,1), UHome(3,1),'MarkerFaceColor','k');
+    feetPosLeg2 = scatter3(UHome(1,2),UHome(2,2), UHome(3,2),'MarkerFaceColor','k');
+    feetPosLeg3 = scatter3(UHome(1,3),UHome(2,3), UHome(3,3),'MarkerFaceColor','k');
+    feetPosLeg4 = scatter3(UHome(1,4),UHome(2,4), UHome(3,4),'MarkerFaceColor','k');
+
+    % put points in array so easier to delete
+    jntPointArr = [currHipJntPointLeg1,currKneeJntPointLeg1,currAnkleJntPointLeg1,...
+        currHipJntPointLeg2,currKneeJntPointLeg2,currAnkleJntPointLeg2,...
+        currHipJntPointLeg3,currKneeJntPointLeg3,currAnkleJntPointLeg3,...
+        currHipJntPointLeg4,currKneeJntPointLeg4,currAnkleJntPointLeg4,...
+        feetPosLeg1,feetPosLeg2, feetPosLeg3, feetPosLeg4];
+    
+    
+    %% Plot the lines connecting the joints
+    
+    % connect hips
+    hip1To2Line = plot3([listOfJntPosLeg1(1,i);listOfJntPosLeg2(1,i)],...
+        [listOfJntPosLeg1(2,i);listOfJntPosLeg2(2,i)],...
+        [listOfJntPosLeg1(3,i);listOfJntPosLeg2(3,i)],'r-');
+    hip2To4Line = plot3([listOfJntPosLeg2(1,i);listOfJntPosLeg4(1,i)],...
+        [listOfJntPosLeg2(2,i);listOfJntPosLeg4(2,i)],...
+        [listOfJntPosLeg2(3,i);listOfJntPosLeg4(3,i)],'r-');
+    hip3To4Line = plot3([listOfJntPosLeg3(1,i);listOfJntPosLeg4(1,i)],...
+        [listOfJntPosLeg3(2,i);listOfJntPosLeg4(2,i)],...
+        [listOfJntPosLeg3(3,i);listOfJntPosLeg4(3,i)],'r-');
+    hip3To1Line = plot3([listOfJntPosLeg3(1,i);listOfJntPosLeg1(1,i)],...
+        [listOfJntPosLeg3(2,i);listOfJntPosLeg1(2,i)],...
+        [listOfJntPosLeg3(3,i);listOfJntPosLeg1(3,i)],'r-');
+    
+    % connect hips to knees
+    hipToKneeLineLeg1 = plot3([listOfJntPosLeg1(1,i);listOfJntPosLeg1(4,i)],...
+        [listOfJntPosLeg1(2,i);listOfJntPosLeg1(5,i)],...
+        [listOfJntPosLeg1(3,i);listOfJntPosLeg1(6,i)],'r-');
+    hipToKneeLineLeg2 = plot3([listOfJntPosLeg2(1,i);listOfJntPosLeg2(4,i)],...
+        [listOfJntPosLeg2(2,i);listOfJntPosLeg2(5,i)],...
+        [listOfJntPosLeg2(3,i);listOfJntPosLeg2(6,i)],'r-');
+    hipToKneeLineLeg3 = plot3([listOfJntPosLeg3(1,i);listOfJntPosLeg3(4,i)],...
+        [listOfJntPosLeg3(2,i);listOfJntPosLeg3(5,i)],...
+        [listOfJntPosLeg3(3,i);listOfJntPosLeg3(6,i)],'r-');
+    hipToKneeLineLeg4 = plot3([listOfJntPosLeg4(1,i);listOfJntPosLeg4(4,i)],...
+        [listOfJntPosLeg4(2,i);listOfJntPosLeg4(5,i)],...
+        [listOfJntPosLeg4(3,i);listOfJntPosLeg4(6,i)],'r-');
+    
+    
+    % connect knees to ankles
+    kneeToAnkleLineLeg1 = plot3([listOfJntPosLeg1(7,i);listOfJntPosLeg1(4,i)],...
+        [listOfJntPosLeg1(8,i);listOfJntPosLeg1(5,i)],...
+        [listOfJntPosLeg1(9,i);listOfJntPosLeg1(6,i)],'r-');
+    kneeToAnkleLineLeg2 = plot3([listOfJntPosLeg2(7,i);listOfJntPosLeg2(4,i)],...
+        [listOfJntPosLeg2(8,i);listOfJntPosLeg2(5,i)],...
+        [listOfJntPosLeg2(9,i);listOfJntPosLeg2(6,i)],'r-');
+    kneeToAnkleLineLeg3 = plot3([listOfJntPosLeg3(7,i);listOfJntPosLeg3(4,i)],...
+        [listOfJntPosLeg3(8,i);listOfJntPosLeg3(5,i)],...
+        [listOfJntPosLeg3(9,i);listOfJntPosLeg3(6,i)],'r-');
+    kneeToAnkleLineLeg4 = plot3([listOfJntPosLeg4(7,i);listOfJntPosLeg4(4,i)],...
+        [listOfJntPosLeg4(8,i);listOfJntPosLeg4(5,i)],...
+        [listOfJntPosLeg4(9,i);listOfJntPosLeg4(6,i)],'r-');
+    
+    % connect ankles to feet
+     ankleToFeetLineLeg1 = plot3([listOfJntPosLeg1(7,i);UHome(1,1)],...
+        [listOfJntPosLeg1(8,i);UHome(2,1)],...
+        [listOfJntPosLeg1(9,i);UHome(3,1)],'r-');
+    ankleToFeetLineLeg2 = plot3([listOfJntPosLeg2(7,i);UHome(1,2)],...
+        [listOfJntPosLeg2(8,i);UHome(2,2)],...
+        [listOfJntPosLeg2(9,i);UHome(3,2)],'r-');
+    ankleToFeetLineLeg3 = plot3([listOfJntPosLeg3(7,i);UHome(1,3)],...
+        [listOfJntPosLeg3(8,i);UHome(2,3)],...
+        [listOfJntPosLeg3(9,i);UHome(3,3)],'r-');
+    ankleToFeetLineLeg4 = plot3([listOfJntPosLeg4(7,i);UHome(1,4)],...
+        [listOfJntPosLeg4(8,i);UHome(2,4)],...
+        [listOfJntPosLeg4(9,i);UHome(3,4)],'r-');
+    
+    % put in array so easier to delete afterwards
+    lineArr = [hip1To2Line,hip2To4Line,hip3To4Line hip3To1Line,...
+        hipToKneeLineLeg1, hipToKneeLineLeg2, hipToKneeLineLeg3,...
+        hipToKneeLineLeg4,kneeToAnkleLineLeg1, kneeToAnkleLineLeg2,...
+        kneeToAnkleLineLeg3,kneeToAnkleLineLeg4, ankleToFeetLineLeg1,...
+        ankleToFeetLineLeg2, ankleToFeetLineLeg3, ankleToFeetLineLeg4];
+    
+    
+    %% draw and pause so can see it
     drawnow
     pause(0.01);
-    
+    %% Delete the previous points and lines unless its the last time point
+    if i ~= length(trajectPositions)
+        for k=1:length(jntPointArr)
+            delete(jntPointArr(k))
+        end
+        for k=1:length(lineArr)
+            delete(lineArr(k))
+        end
+    end
 end
-
-
-
-% calculate the inverse kinematics
-%     [AlphaiCurr,BetaiCurr,GammaiCurr,UCurr, hipJntPosCurr,kneeJntPosCurr,ankleJntPosCurr] = InverseKinematicsParallelWalkingV2(currPose, 'XYZ', true);
-
-% % get cubic trajectory constants
-% % format: rows are joints alpha; beta; gamma, columns are a values a0-a3 (3x4)
-% leg1Consts =zeros(3,4);
-% leg2Consts =zeros(3,4);
-% leg3Consts =zeros(3,4);
-% leg4Consts =zeros(3,4);
-% for i=1:4 % for each leg
-%     for k=1:3
-%         switch i
-%             case 1 % leg 1
-%                 leg1Consts(k,:) = cubicTrajectConstsV1(t0,tf,homeAnglesMat(k,i),goalAnglesMat(k,i),v0,vf);
-%             case 2 % leg 2
-%                 leg2Consts(k,:) = cubicTrajectConstsV1(t0,tf,homeAnglesMat(k,i),goalAnglesMat(k,i),v0,vf);
-%             case 3% leg 3
-%                 leg3Consts(k,:) = cubicTrajectConstsV1(t0,tf,homeAnglesMat(k,i),goalAnglesMat(k,i),v0,vf);
-%             case 4 % leg 4
-%                 leg4Consts(k,:) = cubicTrajectConstsV1(t0,tf,homeAnglesMat(k,i),goalAnglesMat(k,i),v0,vf);
-%         end
-%     end
-% end
-%
-% timeframe = linspace(t0,tf,20);
-% allLegJointAnglesAtTime = zeros(3,4); % eahc row is alpha, beta, or gamma, columns are the legs
-% % get the joint values for each time
-% for i= 1:length(timeframe)
-%     t = timeframe(i); %get current time
-%     % get the q values for each leg and each joint
-%     for j=1:4 % each leg
-%         for k = 1:3 % each joint
-%             switch j
-%                 case 1 % leg 1
-%                     allLegJointAnglesAtTime(k,j) = cubicTrajectEqn(leg1Consts(1),leg1Consts(2),leg1Consts(3),leg1Consts(4), t);
-%                 case 2 % leg 2
-%                     allLegJointAnglesAtTime(k,j) = cubicTrajectEqn(leg2Consts(1),leg2Consts(2),leg2Consts(3),leg2Consts(4), t);
-%                 case 3 %leg 3
-%                     allLegJointAnglesAtTime(k,j) = cubicTrajectEqn(leg3Consts(1),leg3Consts(2),leg3Consts(3),leg3Consts(4), t);
-%                 case 4%leg 4
-%                     allLegJointAnglesAtTime(k,j) = cubicTrajectEqn(leg4Consts(1),leg4Consts(2),leg4Consts(3),leg4Consts(4), t);
-%             end
-%         end
-%     end
-% % we now have all the joint angles at this specific time
-% end
-
-
 
