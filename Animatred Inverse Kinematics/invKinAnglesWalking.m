@@ -1,4 +1,4 @@
-%% invKinAnglesWalking Function
+%% invKinAnglesWalking Function - By Ethan Lauer
 % This function finds the rest of the angles of the joints needed for
 % inverse kinematics.
 % Given: Li_prime_vect = the set of vectors from the foot tip to the knee

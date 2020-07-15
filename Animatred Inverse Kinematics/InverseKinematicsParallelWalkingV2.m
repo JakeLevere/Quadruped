@@ -1,7 +1,8 @@
-%% Inverse Kinematics for walking robot parallel movement
+%% Inverse Kinematics for walking robot parallel movement Version 2 - By Ethan Lauer
 % Given: goal pose as a 6x1 matrix, rotation type ('XYZ') and boolean 
 % if using degrees or radians
-% Result: Alpha, Beta, and Gama values for each leg and the figure to save
+% Result: Alpha, Beta, and Gamaa values for each leg and the figure to
+% save, the U vector, and joint positions in 3d space
 
 %% Additional Notes
 % Min vertical Position with no rotation: [0;0;4.4475;0;0;0]
@@ -14,7 +15,7 @@
 % leg_min = 4.4434; % for prismatic 6.2
 % leg_max = 9.0552;% for prismatic 10.3
 
-function [Alphai,Betai,Gammai,U, hipJntPos,kneeJntPos,ankleJntPos] = InverseKinematicsParallelWalkingV2(goalPose, rotType, isDeg)
+function [Alphai,Betai,Gammai,U, hipJntPos,kneeJntPos,ankleJntPos] = InverseKinematicsParallelWalkingV2(goalPose, isDeg)
 %% define constants
 numLegs = 4;
 
@@ -42,13 +43,13 @@ end
 [Si1, U] = SandUVectors(topR, botR, theta1Home, theta2Home, isDeg);
 
 %% find Li vector (format: rows are x,y,z, colums are legs)
-[Li_vect,~] = invKin(goalPose,Si1,U,rotType,isDeg);
+[Li_vect,~] = invKin(goalPose,Si1,U,isDeg);
 
 %% Get si2 and alpha values
 [Si2,alphai] = getSi2Alphai(Si1,coxaL1,Li_vect, isDeg);
 Alphai=alphai;
 %% find Li prime vector (format: rows are x,y,z, colums are legs)
-[Li_prime_vect,Li_prime_mag] = invKin(goalPose,Si2,U,rotType,isDeg);
+[Li_prime_vect,Li_prime_mag] = invKin(goalPose,Si2,U,isDeg);
 
 %% get the angles for beta, gamma and all others
 [betai,gammai,~,phii,~] = invKinAnglesWalking(Li_prime_vect, Li_prime_mag,Li_vect,coxaL1,femurL2,tibiaL3, isDeg);

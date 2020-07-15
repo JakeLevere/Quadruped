@@ -1,4 +1,4 @@
-%% getLegJointPos Function
+%% getLegJointPos Function - By Ethan Lauer
 % This function obtains the hip,knee, and ankle positions for each leg for
 % plotting.
 % Given: Li_prime_vect = the set of vectors from the foot tip to the knee

@@ -1,8 +1,8 @@
-%% Inverse kinematics Function
+%% Inverse kinematics Function - By Ethan Lauer
 % Provide a pose (6x1) matrix, set of S, U vectors - paramters of the
 % robot, rotation type( XYZ, ZYZ, etc) and if degrees or radians
 
-function [Lvect,Lmag] = invKin(pose,S,U,rotType,isDeg)
+function [Lvect,Lmag] = invKin(pose,S,U,isDeg)
 O = pose(1:3);
 if isDeg
     R = rotationVectorToMatrix(deg2rad(pose(4:6)));

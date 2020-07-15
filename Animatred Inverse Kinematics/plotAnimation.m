@@ -1,6 +1,9 @@
-%% plot animation
+%% plot animation - By Ethan Lauer
 % this function plots the animation of the robot moving as a parallel
 % mechanism and saves it as a gif.
+% Front legs are light blue, back are dark blue
+% Given: the trajecotry positions in 3d space, list of joint positions for
+% each leg, u home vector, title and file name string
 function [] =plotAnimation(trajectPositions,listOfJntPosLeg1,listOfJntPosLeg2,listOfJntPosLeg3,listOfJntPosLeg4, UHome, Title, fileName)
 fig = figure('Name', Title);
 grid on
@@ -45,10 +48,10 @@ for i=1:length(trajectPositions)
     
     % Feet - putting this in here, might be useful once we start moving the
     % legs and feet as well
-    feetPosLeg1 = scatter3(UHome(1,1),UHome(2,1), UHome(3,1),'MarkerFaceColor','k');
-    feetPosLeg2 = scatter3(UHome(1,2),UHome(2,2), UHome(3,2),'MarkerFaceColor','k');
-    feetPosLeg3 = scatter3(UHome(1,3),UHome(2,3), UHome(3,3),'MarkerFaceColor','k');
-    feetPosLeg4 = scatter3(UHome(1,4),UHome(2,4), UHome(3,4),'MarkerFaceColor','k');
+    feetPosLeg1 = scatter3(UHome(1,1),UHome(2,1), UHome(3,1),'MarkerFaceColor','c');
+    feetPosLeg2 = scatter3(UHome(1,2),UHome(2,2), UHome(3,2),'MarkerFaceColor','c');
+    feetPosLeg3 = scatter3(UHome(1,3),UHome(2,3), UHome(3,3),'MarkerFaceColor','b');
+    feetPosLeg4 = scatter3(UHome(1,4),UHome(2,4), UHome(3,4),'MarkerFaceColor','b');
 
     % put points in array so easier to delete
     jntPointArr = [currHipJntPointLeg1,currKneeJntPointLeg1,currAnkleJntPointLeg1,...
@@ -142,5 +145,4 @@ for i=1:length(trajectPositions)
         end
     end
 end
-
 end

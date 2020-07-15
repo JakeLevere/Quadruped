@@ -14,6 +14,13 @@ theta1RadHome = deg2rad(theta1DegHome);% radians
 theta2DegHome = 54.02;% degrees
 theta2RadHome = deg2rad(theta2DegHome);% radians
 
+% Alpha limits
+% theta1 legs 1 and 2 = -37.3 degrees -> 35.24deg  = hip angle max - theta1 legs 1 and 2
+
+% -43.29 degrees = hip angle min - theta2 legs 3 and 4
+% 43.36 degrees = hip angle max - theta2 legs 3 and 4
+
+
 si2 = zeros(3,length(si1));
 Alphai = zeros(1,length(si1));
 for i =1:length(si1)
@@ -40,5 +47,8 @@ else
     alphai(3) = round(Alphai(3)-theta2RadHome,6);
     alphai(4) = round(Alphai(4)+theta2RadHome,6);
 end
+
+
+
 
 end

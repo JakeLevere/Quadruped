@@ -1,9 +1,21 @@
-%% Test File for Inverse Kinematics Final Project
+%% Test File for Inverse Kinematics Final Project - by Ethan Lauer
 clc; clear all; close all;
-%% Test Gif Results
-[allAlphai,allBetai,allGammai] = parallelMoveTrajectV1([0;0; 5.7477;0;0;0], [0;0;8;0;0;0], 'XYZ',true,0,5,20,0,0,'Stickplot Home position to [0;0;8;0;0;0]','Home_to_0-0-8-0-0-0.gif')
 
-[allAlphai2,allBetai2,allGammai2] = parallelMoveTrajectV1([0;0; 5.7477;0;0;0], [0;2;5;-5;5;-45], 'XYZ',true,0,5,20,0,0,'Stickplot Home position to [0;2;5;-5;5;-45]','Home_to_0-2-5--5-5--45.gif')
+%% Constants while testing
+homePose = [0;0; 5.7477;0;0;0];
+t0 =0;
+tf =5;
+tstep =20;
+v0 = 0;
+vf = 0;
+isDeg = true;
+
+%% Test Gif Results
+[allAlphai,allBetai,allGammai] = parallelMoveTrajectV1(homePose, [0;0;8;0;0;0],isDeg,t0,tf,tstep,v0,vf,'Stickplot Home position to [0;0;8;0;0;0]','Home_to_0-0-8-0-0-0.gif')
+
+[allAlphai2,allBetai2,allGammai2] = parallelMoveTrajectV1(homePose, [0;2;5;-5;5;-45],isDeg,t0,tf,20,v0,vf,'Stickplot Home position to [0;2;5;-5;5;-45]','Home_to_0-2-5--5-5--45.gif')
+
+[allAlphai3,allBetai4,allGammai3] = parallelMoveTrajectV1(homePose, [2.5;0;6;-15;25;0],isDeg,t0,tf,20,v0,vf,'Stickplot Home position to [0;2;5;-5;5;-45]','Home_to_2.5-0-6--15-25-0.gif')
 
 
 %% Test Position Results

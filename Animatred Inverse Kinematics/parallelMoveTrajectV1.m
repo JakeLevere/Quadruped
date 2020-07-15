@@ -1,34 +1,28 @@
-%% Parallel Movement of a Walking Robot With Trajectory
-% Given: Home pose(6x1), goal pose (6x1), rotation type (ex. 'XYZ'),
+%% Parallel Movement of a Walking Robot With Trajectory - by Ethan Lauer
+% Given: Home pose(6x1), goal pose (6x1),
 % boolean true if degrees false if radians, initial and final times t0, and
 % tf, the time step for each of those position (tf) and initial and final
 % velocities vo & vf, Title name (ex. 'stickplot'),
 % and file name to save gif of animation (ex. 'pose_to_pose.gif')
 % Result: allAlphai,allBetai,allGammai - all values of alpha, beta, and
 % gamma that each leg needs ot move to to follow the trajectory.
-function [allAlphai,allBetai,allGammai] = parallelMoveTrajectV1(homePose, goalPose, rotType,isDeg,t0,tf,tstep,v0,vf,Title,filename)
+%
+% Units: inches, inches/sec, seconds
+function [allAlphai,allBetai,allGammai] = parallelMoveTrajectV1(homePose, goalPose,isDeg,t0,tf,tstep,v0,vf,Title,filename)
 %% Initial Positions, angles and values
-% homePose = [0;0; 5.7477;0;0;0];
-[AlphaiHome,BetaiHome,GammaiHome,UHome, ~,~,~] = InverseKinematicsParallelWalkingV2(homePose, rotType, isDeg);
+[AlphaiHome,BetaiHome,GammaiHome,UHome, ~,~,~] = InverseKinematicsParallelWalkingV2(homePose, isDeg);
 
 % format: columns are the legs, rows are the angles alpha;beta;gamma(3x4)
-homeAnglesMat = [AlphaiHome;BetaiHome;GammaiHome]
+% homeAnglesMat = [AlphaiHome;BetaiHome;GammaiHome];
 
-% goalPose =[0;2;5;-5;5;-45];
-% goalPose = [0;0;8;0;0;0];
-[AlphaiGoal,BetaiGoal,GammaiGoal,~,~,~,~] = InverseKinematicsParallelWalkingV2(goalPose, rotType, isDeg);
+[AlphaiGoal,BetaiGoal,GammaiGoal,~,~,~,~] = InverseKinematicsParallelWalkingV2(goalPose, isDeg);
 
 % format: columns are the legs, rows are the angles alpha;beta;gamma(3x4)
-goalAnglesMat = [AlphaiGoal;BetaiGoal;GammaiGoal]
+goalAnglesMat = [AlphaiGoal;BetaiGoal;GammaiGoal];
 
-% initial and final times in seconds
-% t0 = 0;
-% tf = 5;
-timeframe = linspace(t0,tf,tstep); % time step array that you move to that position
+% time step array that you move to that position
+timeframe = linspace(t0,tf,tstep);
 
-% initial and final velocities in inches/second
-% v0 =0;
-% vf =0;
 % constants for the cubic trajectory for the endeffector
 % Positions
 [xA0,xA1,xA2,xA3] = cubicTrajectConstsTaskSpace(t0,tf,homePose(1),goalPose(1),v0,vf);
@@ -48,13 +42,13 @@ for i= 1:length(timeframe)
     xPosCurr = cubicTrajectEqn(xA0,xA1,xA2,xA3, t);
     yPosCurr = cubicTrajectEqn(yA0,yA1,yA2,yA3, t);
     zPosCurr = cubicTrajectEqn(zA0,zA1,zA2,zA3, t);
-        % get current wx wy and wz orientations a this time
+    % get current wx wy and wz orientations a this time
     wxCurr = cubicTrajectEqn(wxA0,wxA1,wxA2,wxA3, t);
     wyCurr = cubicTrajectEqn(wyA0,wyA1,wyA2,wyA3, t);
     wzCurr = cubicTrajectEqn(wzA0,wzA1,wzA2,wzA3, t);
     
-    currPose = [xPosCurr;yPosCurr;zPosCurr;wxCurr;wyCurr;wzCurr]; 
-    listOfPoses(:,i) = currPose;
+    % Store current pose in list
+    listOfPoses(:,i) = [xPosCurr;yPosCurr;zPosCurr;wxCurr;wyCurr;wzCurr];
 end
 
 %% get the joint positions and values for each point on the trajecotry
@@ -72,7 +66,7 @@ allBetai = zeros(length(listOfPoses),4);
 allGammai = zeros(length(listOfPoses),4);
 for i = 1:length(listOfPoses)
     currPose = listOfPoses(:,i);
-    [AlphaiCurr,BetaiCurr,GammaiCurr,~, hipJntPosCurr,kneeJntPosCurr,ankleJntPosCurr] = InverseKinematicsParallelWalkingV2(currPose, rotType, isDeg);
+    [AlphaiCurr,BetaiCurr,GammaiCurr,~, hipJntPosCurr,kneeJntPosCurr,ankleJntPosCurr] = InverseKinematicsParallelWalkingV2(currPose, isDeg);
     % get a list of all angles needed for the trajectory
     allAlphai(i,:) = AlphaiCurr;
     allBetai(i,:) = BetaiCurr;
@@ -105,14 +99,11 @@ if isequal(allAlphai(length(allAlphai),:),goalAnglesMat(1,:)) || ...
         isequal(allGammai(length(allGammai),:),goalAnglesMat(3,:))
     disp('The final angles were reached')
 else
-        error('The final angles were NOT reached')
-
+    error('The final angles were NOT reached')
+    
 end
-
 
 %% plot animation
 plotAnimation(listOfPoses(1:3,:),listOfJntPosLeg1,listOfJntPosLeg2,listOfJntPosLeg3,listOfJntPosLeg4, UHome,Title,filename)
-
-
 
 end
