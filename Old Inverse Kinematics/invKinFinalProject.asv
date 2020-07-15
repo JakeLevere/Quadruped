@@ -1,0 +1,16 @@
+%% Final Project Inverse Kinematics test
+clc; clear all; close all;
+
+%%
+% See Attached CAD Pictures for Details
+% The following dimensions are in inches:
+leg_min = 4.4434; % for prismatic 6.2
+leg_max = 9.0552;% for prismatic 10.3
+top_diam = 5.23;
+bot_diam = 16.05;
+shin_length = 5.7477;
+thigh_length = 3.4638;
+hip_length =1.5374;
+
+%%
+
