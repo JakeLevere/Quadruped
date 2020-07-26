@@ -62,7 +62,7 @@ for j=1:4
     end
     j=j+1;
 end
-p
+p;
 
 
 %% Trajectory planning
@@ -141,34 +141,24 @@ alphaDeg=Alpha*180/pi
 betaDeg=Beta*180/pi
 gammaDeg=Gamma*180/pi
 
-%% then get theta dot afterwards as well. ********************
-%% animated Stickplot
-
-fig=figure('Name', ' Stickplot moving legs');
-grid on
-xlim([-8,8])
-ylim([-8,8])
-zlim([0,8])
-hold on
-xlabel('X pos(in)')
-ylabel('Y pos(in)')
-zlabel('Z pos(in)')
-title(' Stickplot moving legs')
-view(60,45);
-% view(0,90);
-% view(90,0);
-
+%% Get the joint positions for each leg during each transfer time
 for k = 1:length(timeMat)
-    %% use DH paramters to go from hip joint to the foot tip 
+    % use DH paramters to go from hip joint to the foot tip 
     [~, ~, ~, kneePos_b1, anklePos_b1, footPos_b1]=legTransform(Alpha(1,k),Beta(1,k),Gamma(1,k), coxa, femur, tibia);
     [~, ~, ~, kneePos_b2, anklePos_b2, footPos_b2]=legTransform(Alpha(2,k),Beta(2,k),Gamma(2,k), coxa, femur, tibia);
     [~, ~, ~, kneePos_b3, anklePos_b3, footPos_b3]=legTransform(Alpha(3,k),Beta(3,k),Gamma(3,k), coxa, femur, tibia);
     [~, ~, ~, kneePos_b4, anklePos_b4, footPos_b4]=legTransform(Alpha(4,k),Beta(4,k),Gamma(4,k), coxa, femur, tibia);
-    %% convert joint positions wrt to body for plotting
-    %     the joint positions wrt the body. for plotting we want wrt grnd
-    % legs 1 and 3 need negative x and y values when plotting in the
-    % correct space
-    %     Knee Positions
+   
+    % hip Positions
+    hipPos1 = [xb_g(1);yb_g(1,k); zb_g(1,k)];
+    hipPos2 = [xb_g(2);yb_g(2,k); zb_g(2,k)];
+    hipPos3 = [xb_g(3);yb_g(3,k); zb_g(3,k)];
+    hipPos4 = [xb_g(4);yb_g(4,k); zb_g(4,k)];
+    
+    % Knee Positions 
+    %   the joint positions wrt the body. for plotting we want wrt grnd
+    %   legs 1 and 3 need negative x and y values when plotting in the
+    %   correct space
     kneePos1 = [-kneePos_b1(1)+xb_g(1);-kneePos_b1(2)+yb_g(1,k); kneePos_b1(3)+zb_g(1,k)];
     kneePos2 = kneePos_b2+[xb_g(2);yb_g(2,k);zb_g(2,k)];
     kneePos3 = [-kneePos_b3(1)+xb_g(3);-kneePos_b3(2)+yb_g(3,k);kneePos_b3(3)+zb_g(3,k)];
@@ -178,87 +168,64 @@ for k = 1:length(timeMat)
     anklePos2 = anklePos_b2+[xb_g(2);yb_g(2,k);zb_g(2,k)];
     anklePos3 = [-anklePos_b3(1)+xb_g(3);-anklePos_b3(2)+yb_g(3,k);anklePos_b3(3)+zb_g(3,k)];
     anklePos4 = anklePos_b4+[xb_g(4);yb_g(4,k);zb_g(4,k)];
-    %     Foot Positions
+    %Foot Positions
     footPos1 = [-footPos_b1(1)+xb_g(1);-footPos_b1(2)+yb_g(1,k);footPos_b1(3)+zb_g(1,k)];
     footPos2 = footPos_b2+[xb_g(2);yb_g(2,k);zb_g(2,k)];
     footPos3 = [-footPos_b3(1)+xb_g(3);-footPos_b3(2)+yb_g(3,k);footPos_b3(3)+zb_g(3,k)];
     footPos4 = footPos_b4+[xb_g(4);yb_g(4,k);zb_g(4,k)];
     
-    %% create the joint points
-    hipPosPt1 = scatter3(xb_g(1),yb_g(1,1), zb_g(1,1),'MarkerFaceColor','r');
-    hipPosPt2 = scatter3(xb_g(2),yb_g(2,1), zb_g(2,1),'MarkerFaceColor','g');
-    hipPosPt3 = scatter3(xb_g(3),yb_g(3,1), zb_g(3,1),'MarkerFaceColor','b');
-    hipPosPt4 = scatter3(xb_g(4),yb_g(4,1), zb_g(4,1),'MarkerFaceColor','c');
     
-    kneePosPt1 = scatter3(kneePos1(1),kneePos1(2),kneePos1(3),'MarkerFaceColor','r');
-    kneePosPt2 = scatter3(kneePos2(1),kneePos2(2),kneePos2(3),'MarkerFaceColor','g');
-    kneePosPt3 = scatter3(kneePos3(1),kneePos3(2),kneePos3(3),'MarkerFaceColor','b');
-    kneePosPt4 = scatter3(kneePos4(1),kneePos4(2),kneePos4(3),'MarkerFaceColor','c');
+    % store each position in a 12xk array
+    % rows 1-3 are hip, 4-6 are knee, 7-9 are ankle, 10-12 is foot pos
+    % column for each time
+    transTimeJntPosLeg1(:,k) = [hipPos1;kneePos1;anklePos1;footPos1];
+    transTimeJntPosLeg2(:,k) = [hipPos2;kneePos2;anklePos2;footPos2];
+    transTimeJntPosLeg3(:,k) = [hipPos3;kneePos3;anklePos3;footPos3];  
+    transTimeJntPosLeg4(:,k) = [hipPos4;kneePos4;anklePos4;footPos4];
     
-    anklePosPt1 = scatter3(anklePos1(1),anklePos1(2),anklePos1(3),'MarkerFaceColor','r');
-    anklePosPt2 = scatter3(anklePos2(1),anklePos2(2),anklePos2(3),'MarkerFaceColor','g');
-    anklePosPt3 = scatter3(anklePos3(1),anklePos3(2),anklePos3(3),'MarkerFaceColor','b');
-    anklePosPt4 = scatter3(anklePos4(1),anklePos4(2),anklePos4(3),'MarkerFaceColor','c');
-    
-    footPosPt1 = scatter3(footPos1(1),footPos1(2),footPos1(3),'MarkerFaceColor','r');
-    footPosPt2 = scatter3(footPos2(1),footPos2(2),footPos2(3),'MarkerFaceColor','g');
-    footPosPt3 = scatter3(footPos3(1),footPos3(2),footPos3(3),'MarkerFaceColor','b');
-    footPosPt4 = scatter3(footPos4(1),footPos4(2),footPos4(3),'MarkerFaceColor','c');
-    % store points in array
-    jntPointArr = [hipPosPt1,hipPosPt2,hipPosPt3,hipPosPt4,...
-        kneePosPt1,kneePosPt2,kneePosPt3,kneePosPt4,...
-        anklePosPt1,anklePosPt2,anklePosPt3,anklePosPt4,...
-        footPosPt1,footPosPt2,footPosPt3,footPosPt4];
-    %% Create leg links as lines
-    hipToKneeLineLeg1=plot3([xb_g(1);kneePos1(1)],[yb_g(1,1);kneePos1(2)],[zb_g(1,1);kneePos1(3)],'-r');
-    hipToKneeLineLeg2=plot3([xb_g(2);kneePos2(1)],[yb_g(2,1);kneePos2(2)],[zb_g(2,1);kneePos2(3)],'-r');
-    hipToKneeLineLeg3=plot3([xb_g(3);kneePos3(1)],[yb_g(3,1);kneePos3(2)],[zb_g(3,1);kneePos3(3)],'-r');
-    hipToKneeLineLeg4=plot3([xb_g(4);kneePos4(1)],[yb_g(4,1);kneePos4(2)],[zb_g(4,1);kneePos4(3)],'-r');
-    
-    kneeToAnkleLineLeg1 = plot3([kneePos1(1);anklePos1(1)],[kneePos1(2);anklePos1(2)],[kneePos1(3);anklePos1(3)],'-r');
-    kneeToAnkleLineLeg2 = plot3([kneePos2(1);anklePos2(1)],[kneePos2(2);anklePos2(2)],[kneePos2(3);anklePos2(3)],'-r');
-    kneeToAnkleLineLeg3 = plot3([kneePos3(1);anklePos3(1)],[kneePos3(2);anklePos3(2)],[kneePos3(3);anklePos3(3)],'-r');
-    kneeToAnkleLineLeg4 = plot3([kneePos4(1);anklePos4(1)],[kneePos4(2);anklePos4(2)],[kneePos4(3);anklePos4(3)],'-r');
-    
-    ankleToFootLineLeg1 = plot3([footPos1(1);anklePos1(1)],[footPos1(2);anklePos1(2)],[footPos1(3);anklePos1(3)],'-r');
-    ankleToFootLineLeg2 = plot3([footPos2(1);anklePos2(1)],[footPos2(2);anklePos2(2)],[footPos2(3);anklePos2(3)],'-r');
-    ankleToFootLineLeg3 = plot3([footPos3(1);anklePos3(1)],[footPos3(2);anklePos3(2)],[footPos3(3);anklePos3(3)],'-r');
-    ankleToFootLineLeg4 = plot3([footPos4(1);anklePos4(1)],[footPos4(2);anklePos4(2)],[footPos4(3);anklePos4(3)],'-r');
-    
-    %     plot body rectangle
-    frontBodyLine = plot3([xb_g(1);xb_g(2)],[yb_g(1,1);yb_g(2,1)],[zb_g(1,1);zb_g(2,1)],'-r');
-    leftBodyLine =  plot3([xb_g(1);xb_g(3)],[yb_g(1,1);yb_g(3,1)],[zb_g(1,1);zb_g(3,1)],'-r');
-    rightBodyLine = plot3([xb_g(4);xb_g(2)],[yb_g(4,1);yb_g(2,1)],[zb_g(4,1);zb_g(2,1)],'-r');
-    backBodyLine = plot3([xb_g(4);xb_g(3)],[yb_g(4,1);yb_g(3,1)],[zb_g(4,1);zb_g(3,1)],'-r');
+   
+end
 
-    % store lines in array
-    lineArr = [hipToKneeLineLeg1,hipToKneeLineLeg2,hipToKneeLineLeg3,hipToKneeLineLeg4,...
-        kneeToAnkleLineLeg1,kneeToAnkleLineLeg2,kneeToAnkleLineLeg3,kneeToAnkleLineLeg4,...
-        ankleToFootLineLeg1,ankleToFootLineLeg2,ankleToFootLineLeg3,ankleToFootLineLeg4,...
-        frontBodyLine, leftBodyLine, rightBodyLine, backBodyLine];
-    %% draw, save for giv and pause
-    drawnow
-    frame=getframe(fig);
-    im=frame2im(frame);
-    [imind,cm]=rgb2ind(im,256);
-    if k==1
-        imwrite(imind,cm,'Stickplot moving legs.gif','gif','Loopcount',inf);
-    else
-        imwrite(imind,cm,'Stickplot moving legs.gif','gif','WriteMode','append');
+
+%% Using the kinematic phase
+
+% find reverse for alpha for when staying on the ground
+% AlphaRev = [flip(Alpha(1));flip(Alpha(2,:));flip(Alpha(3,:));flip(Alpha(4,:))];
+
+time = linspace(0,1,16);
+for i = 1:length(time)
+    t = time(i); % current time
+    if t>=0 && t<p(4) %leg 4 moves
+        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,i);
+        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,1);
+        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,1);
+        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
     end
-    
-    pause(1);
-    %% Delete the previous points and lines unless its the last time point
-    if k ~= length(timeMat)
-        for j=1:length(jntPointArr)
-            delete(jntPointArr(j))
-        end
-        for j=1:length(lineArr)
-            delete(lineArr(j))
-        end
+    if t>p(4) && t<p(2) %leg 2 moves
+        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,i-4);
+        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
+        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,1);
+        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
+    end
+    if t>p(2) && t<p(3) % leg 3 moves
+        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,i-8);      
+        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
+        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,end);
+        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
+    end
+    if t>p(3) && t<=time(end)% leg 1 moves
+        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,i-12);
+        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,end);
+        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
+        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,end);
     end
 end
 
+
+%% then get theta dot afterwards as well. ********************
+%% animated Stickplot
+% animateWalk(timeMat,transTimeJntPosLeg1,transTimeJntPosLeg2,transTimeJntPosLeg3,transTimeJntPosLeg4, ' Stickplot moving legs', 'Stickplot moving legs.gif')
+animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, ' Stickplot moving legs', 'Stickplot moving legs kinematic phase.gif')
 
 %% Plotting
 figure('Name','Sine Wave Trajectory')
