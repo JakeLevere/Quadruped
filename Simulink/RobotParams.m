@@ -3,28 +3,23 @@
 %% "Given" Information
 o = [0; 0; 8; 0; 0; 0];
 
+% Simulink Model Parameters
 rleg= 0.5;
 
 % Constant Robot Parameters
-%Constants
-leg_min = 4.4434; % prismatic
-leg_max = 9.0552; % prismatic
-theta1DegHome = 53.64;% degrees
-theta2DegHome = 54.02;% degrees
-top_diam = 5.23;
 shin_length = 5.7477;
 thigh_length = 3.4638;
 hip_length = 1.5374;
-alpha = 53.64 * ((2*pi)/360);
-beta = 54.02 * ((2*pi)/360);
 
-%% Parameters of the home position
-% Assume the robot is moved into home position to satisfy these conditions
-% before performing any parallel motion
 top_diam = 5.23;
 bot_diam = top_diam+(2*(hip_length+thigh_length));
 topR = top_diam/2;
 botR = bot_diam/2;
+
+theta1DegHome = 53.64;% degrees
+theta2DegHome = 54.02;% degrees
+alpha = 53.64 * ((2*pi)/360);
+beta = 54.02 * ((2*pi)/360);
 
 %% Find si and ui matrix
 theta1RadHome = deg2rad(53.64);% radians
