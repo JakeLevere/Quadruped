@@ -190,7 +190,6 @@ end
 %% Using the kinematic phase
 
 % find reverse for alpha for when staying on the ground
-% AlphaRev = [flip(Alpha(1));flip(Alpha(2,:));flip(Alpha(3,:));flip(Alpha(4,:))];
 
 time = linspace(0,1,16);
 for i = 1:length(time)
