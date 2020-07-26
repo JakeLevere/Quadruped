@@ -1,7 +1,7 @@
 %% Simulink Parameters
 
 %% "Given" Information
-o = [0; 0; 8; 0; 0; 0];
+o = [0; 0; 6; 30; 0; 0];
 
 % Simulink Model Parameters
 rleg= 0.5;
@@ -44,7 +44,7 @@ leg1_alpha = create_range(0, alphai(1), ndivisions, 10);
 leg1_beta = create_range(0, betai(1), ndivisions, 10);
 leg1_gamma = create_range(0, gammai(1)-90, ndivisions, 10);
 leg2_alpha = create_range(0, alphai(2), ndivisions, 10);
-leg2_beta = create_range(0, betai, ndivisions, 10);
+leg2_beta = create_range(0, betai(2), ndivisions, 10);
 leg2_gamma = create_range(0, gammai(2)-90, ndivisions, 10);
 leg3_alpha = create_range(0, alphai(3), ndivisions, 10);
 leg3_beta = create_range(0, betai(3), ndivisions, 10);
@@ -52,3 +52,15 @@ leg3_gamma = create_range(0, gammai(3)-90, ndivisions, 10);
 leg4_alpha =create_range(0, alphai(4), ndivisions, 10);
 leg4_beta = create_range(0, betai(4), ndivisions, 10);
 leg4_gamma = create_range(0, gammai(4)-90, ndivisions, 10);
+
+homePose = o;
+goalPose = [0; 0; 4; 0; 0; 0];
+isDeg = true;
+t0 = 0;
+tf = 4;
+tstep = 1;
+v0 = 0;
+vf = 0;
+Title = "Test";
+filename = "TestTrajectory";
+[allAlphai,allBetai,allGammai] = parallelMoveTrajectV1(homePose, goalPose,isDeg,t0,tf,tstep,v0,vf,Title,filename)
