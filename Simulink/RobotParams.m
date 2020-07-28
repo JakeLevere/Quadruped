@@ -109,10 +109,10 @@ for i = 1:length(time)
     
 end
 secondtime = seconds([time 1+time 2+time]);
-leg1_alpha = timetable([alpha(1,:).';alpha(1,:).';alpha(1,:).']+theta1DegHome, 'rowTimes', secondtime);
-leg2_alpha = timetable([alpha(2,:).'; alpha(2,:).';alpha(2,:).']-theta1DegHome, 'rowTimes', secondtime);
-leg3_alpha = timetable([alpha(3,:).'; alpha(3,:).';alpha(3,:).']-theta1DegHome, 'rowTimes', secondtime);
-leg4_alpha = timetable([alpha(4,:).'; alpha(4,:).'; alpha(4,:).']+theta1DegHome, 'rowTimes', secondtime);
+leg1_alpha = timetable([alpha(1,:).';alpha(1,:).';alpha(1,:).'], 'rowTimes', secondtime);
+leg2_alpha = timetable([alpha(2,:).'; alpha(2,:).';alpha(2,:).'], 'rowTimes', secondtime);
+leg3_alpha = timetable([alpha(3,:).'; alpha(3,:).';alpha(3,:).'], 'rowTimes', secondtime);
+leg4_alpha = timetable([alpha(4,:).'; alpha(4,:).'; alpha(4,:).'], 'rowTimes', secondtime);
 
 leg1_beta = timetable([beta(1,:).';beta(1,:).';beta(1,:).'], 'rowTimes', secondtime);
 leg2_beta = timetable([beta(2,:).';beta(2,:).';beta(2,:).'], 'rowTimes', secondtime);
