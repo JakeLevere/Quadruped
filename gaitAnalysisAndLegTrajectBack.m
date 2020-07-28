@@ -27,9 +27,9 @@ end
 %% Trajectory Constants
 % beta = 0.75; % duty factor
 beta = 0.5; % duty factor
-yVel_bg = 4; % desired CG velocity of body (in/sec) ( moving forward in y direction wrt grnd)
+yVel_bg = -4; % desired CG velocity of body (in/sec) ( moving forward in y direction wrt grnd)
 u_fg = yVel_bg/(1-beta); % ave foot hor forward (y)vel wrt gnd (in/sec)
-L = 4; % stride length (in)
+L = -4; % stride length (in)
 u_fb = u_fg-yVel_bg; % ave foot hor forward (y) vel wrt body (in/sec)
 T = L/yVel_bg; % cycle time
 transferTime=(1-beta)*T;
@@ -63,9 +63,6 @@ for j=1:4
     end
     j=j+1;
 end
-p;
-
-
 %% Trajectory planning
 v0 =0;
 vf =0;
@@ -283,13 +280,10 @@ end
 %% animated Stickplot
 % animateWalk(timeMat,transTimeJntPosLeg1,transTimeJntPosLeg2,transTimeJntPosLeg3,transTimeJntPosLeg4, ' Stickplot moving legs', 'Stickplot moving legs.gif')
 
-% xlim([-8,8])
-% ylim([-8,16])
-% zlim([0,8])
-forLims = [-8,8;-8,16;0,8];
+backLims = [-8,8;-16,8;0,8];
 
-animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, 'Walk forward 1 Cycle', 'Walk forward 1 Cycle.gif',forLims)
-animateWalk(longTime,twoCycleJntPosLeg1,twoCycleJntPosLeg2,twoCycleJntPosLeg3,twoCycleJntPosLeg4, 'Walk forward 2 Cycle', 'Walk forward 2 Cycle.gif',forLims)
+animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, 'Walk forward 1 Cycle', 'Walk backward 1 Cycle.gif',backLims)
+animateWalk(longTime,twoCycleJntPosLeg1,twoCycleJntPosLeg2,twoCycleJntPosLeg3,twoCycleJntPosLeg4, 'Walk forward 2 Cycle', 'Walk backward 2 Cycle.gif',backLims)
 
 % animateWalk(longTime,transTimeJntPosLeg12,transTimeJntPosLeg22,transTimeJntPosLeg32,transTimeJntPosLeg42, ' Stickplot moving legs', 'Stickplot moving legs kinematic phase 2 cycles v3.gif')
 
