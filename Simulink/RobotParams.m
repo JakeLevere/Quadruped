@@ -78,36 +78,60 @@ for i = 1:length(time)
     t = time(i); % current time
     if t>=0 && t<p(4)
         alpha(4,i)= alphaDeg(4,i); beta(4,i) = betaDeg(4,i); gamma(4,i) = gammaDeg(4,i); %leg 4 moves
-        alpha(2, i) = alphaDeg(2,1); beta(2, i) = betaDeg(2,1); gamma(2,i) = gammaDeg(3,1); %leg2 stationary
-        alpha(3,i) = alphaDeg(3,1); beta(3,i) = betaDeg(3,1); gamma(3,i) = gammaDeg(3,1); %leg3 stationary
-        alpha(1,i) = alphaDeg(1,1); beta(1, i) = betaDeg(1,1); gamma(1,i) = gammaDeg(1,1); %leg1 stationary
+        %alpha(2, i) = alphaDeg(2,1); 
+        beta(2, i) = betaDeg(2,1); gamma(2,i) = gammaDeg(3,1); %leg2 stationary
+        %alpha(3,i) = alphaDeg(3,1); 
+        beta(3,i) = betaDeg(3,1); gamma(3,i) = gammaDeg(3,1); %leg3 stationary
+        %alpha(1,i) = alphaDeg(1,1); 
+        beta(1, i) = betaDeg(1,1); gamma(1,i) = gammaDeg(1,1); %leg1 stationary
     end
     if t>p(4) && t<p(2) %leg 2 moves
         alpha(2,i)= alphaDeg(2,i-4); beta(2,i) = betaDeg(2,i-4); gamma(2,i) = gammaDeg(2,i-4); %leg 2 moves
-        alpha(4, i) = alphaDeg(4,end); beta(4, i) = betaDeg(4,end); gamma(4,i) = gammaDeg(4,end); %leg4 stationary
-        alpha(3,i) = alphaDeg(3,1); beta(3,i) = betaDeg(3,1); gamma(3,i) = gammaDeg(3,1); %leg3 stationary
-        alpha(1,i) = alphaDeg(1,1); beta(1, i) = betaDeg(1,1); gamma(1,i) = gammaDeg(1,1); %leg1 stationary
+        %alpha(4, i) = alphaDeg(4,end);
+        beta(4, i) = betaDeg(4,end); gamma(4,i) = gammaDeg(4,end); %leg4 stationary
+        %alpha(3,i) = alphaDeg(3,1); 
+        beta(3,i) = betaDeg(3,1); gamma(3,i) = gammaDeg(3,1); %leg3 stationary
+        %alpha(1,i) = alphaDeg(1,1); 
+        beta(1, i) = betaDeg(1,1); gamma(1,i) = gammaDeg(1,1); %leg1 stationary
     end
     
     if t>p(2) && t<p(3) % leg 3 moves
         
         alpha(3,i)= alphaDeg(3,i-8); beta(3,i) = betaDeg(3,i-8); gamma(3,i) = gammaDeg(3,i-8); %leg 3 moves
-        alpha(4, i) = alphaDeg(4,end); beta(4, i) = betaDeg(4,end); gamma(4,i) = gammaDeg(4,end); %leg4 stationary
-        alpha(2,i) = alphaDeg(2,end); beta(2,i) = betaDeg(2,end); gamma(2,i) = gammaDeg(2,end); %leg2 stationary
-        alpha(1,i) = alphaDeg(1,1); beta(1, i) = betaDeg(1,1); gamma(1,i) = gammaDeg(1,1); %leg1 stationary
+        %alpha(4, i) = alphaDeg(4,end);
+        beta(4, i) = betaDeg(4,end); gamma(4,i) = gammaDeg(4,end); %leg4 stationary
+        %alpha(2,i) = alphaDeg(2,end); 
+        beta(2,i) = betaDeg(2,end); gamma(2,i) = gammaDeg(2,end); %leg2 stationary
+        %alpha(1,i) = alphaDeg(1,1); 
+        beta(1, i) = betaDeg(1,1); gamma(1,i) = gammaDeg(1,1); %leg1 stationary
         
     end
     
     if t>p(3) && t<=time(end)% leg 1 moves
         
         alpha(1,i)= alphaDeg(1,i-12); beta(1,i) = betaDeg(1,i-12); gamma(1,i) = gammaDeg(1,i-12); %leg 1 moves
-        alpha(4, i) = alphaDeg(4,end); beta(4, i) = betaDeg(4,end); gamma(4,i) = gammaDeg(4,end); %leg4 stationary
-        alpha(2,i) = alphaDeg(2,end); beta(2,i) = betaDeg(2,end); gamma(2,i) = gammaDeg(2,end); %leg2 stationary
-        alpha(3,i) = alphaDeg(3,end); beta(3, i) = betaDeg(3,end); gamma(3,i) = gammaDeg(3,end); %leg3 stationary
+        %alpha(4, i) = alphaDeg(4,end); 
+        beta(4, i) = betaDeg(4,end); gamma(4,i) = gammaDeg(4,end); %leg4 stationary
+        %alpha(2,i) = alphaDeg(2,end); 
+        beta(2,i) = betaDeg(2,end); gamma(2,i) = gammaDeg(2,end); %leg2 stationary
+        %alpha(3,i) = alphaDeg(3,end); 
+        beta(3, i) = betaDeg(3,end); gamma(3,i) = gammaDeg(3,end); %leg3 stationary
         
     end
     
 end
+
+alpha(4,5:end) = linspace(alphaDeg(4,end), alphaDeg(4,1), 12);
+alpha(1,1:12) = linspace(alphaDeg(1,end), alphaDeg(1,1), 12);
+
+alpha2 = linspace(alphaDeg(2,end), alphaDeg(2,1), 12);
+alpha(2, 9:end) = alpha2(1:8);
+alpha(2, 1:4) = alpha2(end-3: end);
+
+alpha3 = linspace(alphaDeg(3,end), alphaDeg(3,1), 12);
+alpha(3, 13:end) = alpha3(1:4);
+alpha(3, 1:8) = alpha3(end-7: end);
+
 secondtime = seconds([time 1+time 2+time]);
 leg1_alpha = timetable([alpha(1,:).';alpha(1,:).';alpha(1,:).'], 'rowTimes', secondtime);
 leg2_alpha = timetable([alpha(2,:).'; alpha(2,:).';alpha(2,:).'], 'rowTimes', secondtime);
