@@ -25,7 +25,8 @@ end
 [S, U] = SandUVectors(topR, botR, theta1Home, theta2Home, false);
 
 %% Trajectory Constants
-beta = 0.75; % duty factor
+% beta = 0.75; % duty factor
+beta = 0.5; % duty factor
 yVel_bg = 4; % desired CG velocity of body (in/sec) ( moving forward in y direction wrt grnd)
 u_fg = yVel_bg/(1-beta); % ave foot hor forward (y)vel wrt gnd (in/sec)
 L = 4; % stride length (in)
@@ -142,126 +143,186 @@ betaDeg=Beta*180/pi
 gammaDeg=Gamma*180/pi
 
 %% Get the joint positions for each leg during each transfer time
-for k = 1:length(timeMat)
-    % use DH paramters to go from hip joint to the foot tip 
-    [~, ~, ~, kneePos_b1, anklePos_b1, footPos_b1]=legTransform(Alpha(1,k),Beta(1,k),Gamma(1,k), coxa, femur, tibia);
-    [~, ~, ~, kneePos_b2, anklePos_b2, footPos_b2]=legTransform(Alpha(2,k),Beta(2,k),Gamma(2,k), coxa, femur, tibia);
-    [~, ~, ~, kneePos_b3, anklePos_b3, footPos_b3]=legTransform(Alpha(3,k),Beta(3,k),Gamma(3,k), coxa, femur, tibia);
-    [~, ~, ~, kneePos_b4, anklePos_b4, footPos_b4]=legTransform(Alpha(4,k),Beta(4,k),Gamma(4,k), coxa, femur, tibia);
-   
-    % hip Positions
-    hipPos1 = [xb_g(1);yb_g(1,k); zb_g(1,k)];
-    hipPos2 = [xb_g(2);yb_g(2,k); zb_g(2,k)];
-    hipPos3 = [xb_g(3);yb_g(3,k); zb_g(3,k)];
-    hipPos4 = [xb_g(4);yb_g(4,k); zb_g(4,k)];
-    
-    % Knee Positions 
-    %   the joint positions wrt the body. for plotting we want wrt grnd
-    %   legs 1 and 3 need negative x and y values when plotting in the
-    %   correct space
-    kneePos1 = [-kneePos_b1(1)+xb_g(1);-kneePos_b1(2)+yb_g(1,k); kneePos_b1(3)+zb_g(1,k)];
-    kneePos2 = kneePos_b2+[xb_g(2);yb_g(2,k);zb_g(2,k)];
-    kneePos3 = [-kneePos_b3(1)+xb_g(3);-kneePos_b3(2)+yb_g(3,k);kneePos_b3(3)+zb_g(3,k)];
-    kneePos4 = kneePos_b4+[xb_g(4);yb_g(4,k);zb_g(4,k)];
-    % ankle Positions
-    anklePos1 = [-anklePos_b1(1)+xb_g(1);-anklePos_b1(2)+yb_g(1,k);anklePos_b1(3)+zb_g(1,k)];
-    anklePos2 = anklePos_b2+[xb_g(2);yb_g(2,k);zb_g(2,k)];
-    anklePos3 = [-anklePos_b3(1)+xb_g(3);-anklePos_b3(2)+yb_g(3,k);anklePos_b3(3)+zb_g(3,k)];
-    anklePos4 = anklePos_b4+[xb_g(4);yb_g(4,k);zb_g(4,k)];
-    %Foot Positions
-    footPos1 = [-footPos_b1(1)+xb_g(1);-footPos_b1(2)+yb_g(1,k);footPos_b1(3)+zb_g(1,k)];
-    footPos2 = footPos_b2+[xb_g(2);yb_g(2,k);zb_g(2,k)];
-    footPos3 = [-footPos_b3(1)+xb_g(3);-footPos_b3(2)+yb_g(3,k);footPos_b3(3)+zb_g(3,k)];
-    footPos4 = footPos_b4+[xb_g(4);yb_g(4,k);zb_g(4,k)];
-    
-    
+[transTimeJntPosLeg1,transTimeJntPosLeg2,transTimeJntPosLeg3,transTimeJntPosLeg4] = getJntPosInTransTime(Alpha,Beta,Gamma,coxa,femur,tibia, xb_g, yb_g,zb_g);
+
+%% Using the kinematic phase
+% for 0.5 duty factor
+% this is just one cycle time
+time = linspace(0,T,10);
+for i=1:numLegs
+    yHipB_G(i,1) = S(2,i);
+    zHipB_G(i,1) = homeBodH;
+    xHipB_G(i,1) =S(1,i); % dont want to move laterally in the x direction??????????????????????????????????
+end
+% get hip positions for the full phase since you are moving constantly
+for i = 1:numLegs
+    for t=1:length(time) 
+        yHipB_G(i,t+1)=yHipB_G(i,t)+yVel_bg*time(2);% change in time is even
+        zHipB_G(i,t+1)=zHipB_G(i,t)+zVel_bg*time(2);
+    end
+end
+for i = 1:length(time)
+    t = time(i); % current time
     % store each position in a 12xk array
     % rows 1-3 are hip, 4-6 are knee, 7-9 are ankle, 10-12 is foot pos
     % column for each time
-    transTimeJntPosLeg1(:,k) = [hipPos1;kneePos1;anklePos1;footPos1];
-    transTimeJntPosLeg2(:,k) = [hipPos2;kneePos2;anklePos2;footPos2];
-    transTimeJntPosLeg3(:,k) = [hipPos3;kneePos3;anklePos3;footPos3];  
-    transTimeJntPosLeg4(:,k) = [hipPos4;kneePos4;anklePos4;footPos4];
-    
-   
-end
-
-
-%% Using the kinematic phase
-
-% find reverse for alpha for when staying on the ground
-
-time = linspace(0,1,16);
-for i = 1:length(time)
-    t = time(i); % current time
-    if t>=0 && t<p(4) %leg 4 moves
-        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,i);
-        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,1);
-        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,1);
+         
+    if t>=0 && t<p(2) %leg 2 and 3 moves
+        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,i);
+        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,i);
+        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,1);
         cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
     end
-    if t>p(4) && t<p(2) %leg 2 moves
-        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,i-4);
-        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
-        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,1);
-        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
-    end
-    if t>p(2) && t<p(3) % leg 3 moves
-        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,i-8);      
-        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
+    if t>=p(2) && t<=time(end) %leg 1 and 4 moves 
+        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,i-(length(time)/2));
+        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,i-(length(time)/2));
         cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,end);
-        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
-    end
-    if t>p(3) && t<=time(end)% leg 1 moves
-        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,i-12);
-        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,end);
-        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
         cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,end);
     end
+    
 end
+
+
+%% now for a custom time frame, repeat the cycle
+
+% two cycles
+longTime = linspace(0,2*T,20);
+for i=1:numLegs
+    yHipB_G(i,1) = S(2,i);
+    zHipB_G(i,1) = homeBodH;
+    xHipB_G(i,1) =S(1,i); % dont want to move laterally in the x direction??????????????????????????????????
+end
+% get hip positions for the full phase since you are moving constantly
+for i = 1:numLegs
+    for t=1:length(longTime)-1 
+        yHipB_G(i,t+1)=yHipB_G(i,t)+yVel_bg*longTime(2);% change in time is even
+        zHipB_G(i,t+1)=zHipB_G(i,t)+zVel_bg*longTime(2);
+    end
+end
+[transTimeJntPosLeg12,transTimeJntPosLeg22,transTimeJntPosLeg32,transTimeJntPosLeg42] = getAllJntPositions(Alpha,Beta,Gamma,coxa,femur,tibia, xHipB_G, yHipB_G,zHipB_G);
+
+for i = 1:length(longTime)
+    t = longTime(i); % current time
+    % store each position in a 12xk array
+    % rows 1-3 are hip, 4-6 are knee, 7-9 are ankle, 10-12 is foot pos
+    % column for each time
+         
+    % assuming only hips are moving together, all other joints are still.
+    twoCycleJntPosLeg1(1:3,i) = transTimeJntPosLeg12(1:3,i);
+    twoCycleJntPosLeg2(1:3,i) = transTimeJntPosLeg22(1:3,i);
+    twoCycleJntPosLeg3(1:3,i) = transTimeJntPosLeg32(1:3,i);
+    twoCycleJntPosLeg4(1:3,i) = transTimeJntPosLeg42(1:3,i);
+    
+    
+    if t>=0 && t<p(2) %leg 2 and 3 moves
+        twoCycleJntPosLeg2(4:12,i)= transTimeJntPosLeg22(4:12,i);
+        twoCycleJntPosLeg3(4:12,i)= transTimeJntPosLeg32(4:12,i);
+        twoCycleJntPosLeg4(4:12,i)= transTimeJntPosLeg42(4:12,1);
+        twoCycleJntPosLeg1(4:12,i)= transTimeJntPosLeg12(4:12,1);
+        k=i;
+    end
+    if t>=p(2) && t<T %leg 1 and 4 moves 
+        twoCycleJntPosLeg1(4:12,i)= transTimeJntPosLeg12(4:12,i);
+        twoCycleJntPosLeg4(4:12,i)= transTimeJntPosLeg42(4:12,i);
+        twoCycleJntPosLeg2(4:12,i)= transTimeJntPosLeg22(4:12,k);
+        twoCycleJntPosLeg3(4:12,i)= transTimeJntPosLeg32(4:12,k);
+        r=i;
+    end
+    if t>=T && t<(T+p(2)) %leg 2 and 3 moves
+        twoCycleJntPosLeg2(4:12,i)= transTimeJntPosLeg22(4:12,i);
+        twoCycleJntPosLeg3(4:12,i)= transTimeJntPosLeg32(4:12,i);
+        twoCycleJntPosLeg4(4:12,i)= transTimeJntPosLeg42(4:12,r);
+        twoCycleJntPosLeg1(4:12,i)= transTimeJntPosLeg12(4:12,r);
+        k=i;
+    end
+    if t>=(T+p(2)) && t<=longTime(end) %leg 1 and 4 moves
+        twoCycleJntPosLeg1(4:12,i)= transTimeJntPosLeg12(4:12,i);
+        twoCycleJntPosLeg4(4:12,i)= transTimeJntPosLeg42(4:12,i);
+        twoCycleJntPosLeg2(4:12,i)= transTimeJntPosLeg22(4:12,k);
+        twoCycleJntPosLeg3(4:12,i)= transTimeJntPosLeg32(4:12,k);
+        r=i;
+    end
+
+end
+
+
+% this is for 0.75 duty factor
+%
+% time = linspace(0,1,16);
+% for i = 1:length(time)
+%     t = time(i); % current time
+%
+%     if t>=0 && t<p(4) %leg 4 moves
+%         cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,i);
+%         cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,1);
+%         cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,1);
+%         cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
+%     end
+%     if t>p(4) && t<p(2) %leg 2 moves
+%         cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,i-4);
+%         cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
+%         cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,1);
+%         cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
+%     end
+%     if t>p(2) && t<p(3) % leg 3 moves
+%         cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,i-8);
+%         cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
+%         cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,end);
+%         cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
+%     end
+%     if t>p(3) && t<=time(end)% leg 1 moves
+%         cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,i-11);
+%         cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,end);
+%         cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
+%         cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,end);
+%     end
+% end
 
 
 %% then get theta dot afterwards as well. ********************
 %% animated Stickplot
 % animateWalk(timeMat,transTimeJntPosLeg1,transTimeJntPosLeg2,transTimeJntPosLeg3,transTimeJntPosLeg4, ' Stickplot moving legs', 'Stickplot moving legs.gif')
-animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, ' Stickplot moving legs', 'Stickplot moving legs kinematic phase.gif')
+% animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, ' Stickplot moving legs', 'Stickplot moving legs kinematic phase.gif')
+animateWalk(longTime,twoCycleJntPosLeg1,twoCycleJntPosLeg2,twoCycleJntPosLeg3,twoCycleJntPosLeg4, ' Stickplot moving legs', 'Stickplot moving legs kinematic phase 2 cycles v3.gif')
+
+% animateWalk(longTime,transTimeJntPosLeg12,transTimeJntPosLeg22,transTimeJntPosLeg32,transTimeJntPosLeg42, ' Stickplot moving legs', 'Stickplot moving legs kinematic phase 2 cycles v3.gif')
 
 %% Plotting
-figure('Name','Sine Wave Trajectory')
-plot(posF_g(1,:),posF_g(2,:),'r-')
-grid on
-xlabel('y pos (in)')
-ylabel('z pos (in)')
-title('Sine Wave Trajectory wrt gnd')
-
-figure('Name','Y position over time')
-plot(timeMat,posF_g(1,:),'r-')
-grid on
-xlabel('time (s)')
-ylabel('y pos (in)')
-title('Y position over time wrt gnd')
-
-
-figure('Name','Y velocity over time')
-plot(timeMat,velF_g(1,:),'r-')
-grid on
-xlabel('time (s)')
-ylabel('dy vel (in/s)')
-title('DY vel over time wrt gnd')
-
-figure('Name','z position over time')
-plot(timeMat,posF_g(2,:),'r-')
-grid on
-xlabel('time (s)')
-ylabel('z pos (in)')
-title('z position over time wrt gnd')
-
-figure('Name','z velocity over time')
-plot(timeMat,velF_g(2,:),'r-')
-grid on
-xlabel('time (s)')
-ylabel('dz vel (in/s)')
-title('Dz vel over time wrt gnd')
+% figure('Name','Sine Wave Trajectory')
+% plot(posF_g(1,:),posF_g(2,:),'r-')
+% grid on
+% xlabel('y pos (in)')
+% ylabel('z pos (in)')
+% title('Sine Wave Trajectory wrt gnd')
+%
+% figure('Name','Y position over time')
+% plot(timeMat,posF_g(1,:),'r-')
+% grid on
+% xlabel('time (s)')
+% ylabel('y pos (in)')
+% title('Y position over time wrt gnd')
+%
+%
+% figure('Name','Y velocity over time')
+% plot(timeMat,velF_g(1,:),'r-')
+% grid on
+% xlabel('time (s)')
+% ylabel('dy vel (in/s)')
+% title('DY vel over time wrt gnd')
+%
+% figure('Name','z position over time')
+% plot(timeMat,posF_g(2,:),'r-')
+% grid on
+% xlabel('time (s)')
+% ylabel('z pos (in)')
+% title('z position over time wrt gnd')
+%
+% figure('Name','z velocity over time')
+% plot(timeMat,velF_g(2,:),'r-')
+% grid on
+% xlabel('time (s)')
+% ylabel('dz vel (in/s)')
+% title('Dz vel over time wrt gnd')
 
 
 

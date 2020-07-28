@@ -6,7 +6,7 @@ function [] =animateWalk(timeMat,listOfJntPosLeg1,listOfJntPosLeg2,listOfJntPosL
 fig = figure('Name', Title);
 grid on
 xlim([-8,8])
-ylim([-8,8])
+ylim([-8,16])
 zlim([0,8])
 hold on
 xlabel('X Position (in)');
@@ -15,6 +15,8 @@ ylabel('Y Position (in)');
 title(Title)
 filename= fileName;
 view(70,45);
+% view(0,90);
+% view(90,0);
 
 for i=1:length(timeMat)
     
