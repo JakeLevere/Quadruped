@@ -1,3 +1,4 @@
+function[] = gaitlegTrajectFunctionLeftRight(beta,xVel,strideLength,constHeight, maxFH)
 %% Final Project Gait Analysis and Trajecotry Generation  Crab- Ethan Lauer
 clc; clear all; close all
 %% General and Dimension Constants
@@ -20,18 +21,17 @@ theta2Home = deg2rad(54.02);% radians
 [S, U] = SandUVectors(topR, botR, theta1Home, theta2Home);
 
 %% Trajectory Constants
-beta = 0.75; % duty factor
 % beta = 0.5; % duty factor
-xVel_bg = -4; % desired CG velocity of body (in/sec) ( moving forward in y direction wrt grnd)
+xVel_bg = xVel; % desired CG velocity of body (in/sec) ( moving forward in y direction wrt grnd)
 u_fg = xVel_bg/(1-beta); % ave foot hor forward (y)vel wrt gnd (in/sec)
-L = -4; % stride length (in)
+L = strideLength; % stride length (in)
 u_fb = u_fg-xVel_bg; % ave foot hor forward (y) vel wrt body (in/sec)
 T = L/xVel_bg; % cycle time
 transferTime=(1-beta)*T;
 deltaT = transferTime/4; % 4 different intervals, 5 points
-maxFootH = 3; % max foot height (in)
+maxFootH = maxFH; % max foot height (in)
 % homeBodH = 5.7477; % max body height (inches) - home position
-homeBodH=5;
+homeBodH=constHeight;
 zVel_bg = 0; % body is not moving vertically wrt gnd
 
 
@@ -197,51 +197,7 @@ for i = 1:numLegs
         zHipB_G(i,t+1)=zHipB_G(i,t)+zVel_bg*longTime(2);
     end
 end
-% [transTimeJntPosLeg12,transTimeJntPosLeg22,transTimeJntPosLeg32,transTimeJntPosLeg42] = getAllJntPositions(Alpha,Beta,Gamma,coxa,femur,tibia, xHipB_G, yHipB_G,zHipB_G);
-% 
-% for i = 1:length(longTime)
-%     t = longTime(i); % current time
-%     % store each position in a 12xk array
-%     % rows 1-3 are hip, 4-6 are knee, 7-9 are ankle, 10-12 is foot pos
-%     % column for each time
-%     
-%     % assuming only hips are moving together, all other joints are still.
-%     twoCycleJntPosLeg1(1:3,i) = transTimeJntPosLeg12(1:3,i);
-%     twoCycleJntPosLeg2(1:3,i) = transTimeJntPosLeg22(1:3,i);
-%     twoCycleJntPosLeg3(1:3,i) = transTimeJntPosLeg32(1:3,i);
-%     twoCycleJntPosLeg4(1:3,i) = transTimeJntPosLeg42(1:3,i);
-%     
-%     
-%     if t>=0 && t<p(2) %leg 2 and 3 moves
-%         twoCycleJntPosLeg2(4:12,i)= transTimeJntPosLeg22(4:12,i);
-%         twoCycleJntPosLeg3(4:12,i)= transTimeJntPosLeg32(4:12,i);
-%         twoCycleJntPosLeg4(4:12,i)= transTimeJntPosLeg42(4:12,1);
-%         twoCycleJntPosLeg1(4:12,i)= transTimeJntPosLeg12(4:12,1);
-%         k=i;
-%     end
-%     if t>=p(2) && t<T %leg 1 and 4 moves
-%         twoCycleJntPosLeg1(4:12,i)= transTimeJntPosLeg12(4:12,i);
-%         twoCycleJntPosLeg4(4:12,i)= transTimeJntPosLeg42(4:12,i);
-%         twoCycleJntPosLeg2(4:12,i)= transTimeJntPosLeg22(4:12,k);
-%         twoCycleJntPosLeg3(4:12,i)= transTimeJntPosLeg32(4:12,k);
-%         r=i;
-%     end
-%     if t>=T && t<(T+p(2)) %leg 2 and 3 moves
-%         twoCycleJntPosLeg2(4:12,i)= transTimeJntPosLeg22(4:12,i);
-%         twoCycleJntPosLeg3(4:12,i)= transTimeJntPosLeg32(4:12,i);
-%         twoCycleJntPosLeg4(4:12,i)= transTimeJntPosLeg42(4:12,r);
-%         twoCycleJntPosLeg1(4:12,i)= transTimeJntPosLeg12(4:12,r);
-%         k=i;
-%     end
-%     if t>=(T+p(2)) && t<=longTime(end) %leg 1 and 4 moves
-%         twoCycleJntPosLeg1(4:12,i)= transTimeJntPosLeg12(4:12,i);
-%         twoCycleJntPosLeg4(4:12,i)= transTimeJntPosLeg42(4:12,i);
-%         twoCycleJntPosLeg2(4:12,i)= transTimeJntPosLeg22(4:12,k);
-%         twoCycleJntPosLeg3(4:12,i)= transTimeJntPosLeg32(4:12,k);
-%         r=i;
-%     end
-%     
-% end
+
 
 
 % this is for 0.75 duty factor
@@ -279,51 +235,9 @@ end
 
 %% then get theta dot afterwards as well. ********************
 %% animated Stickplot
-
 sideLims = [-8,8;-8,8;0,8];
 
 animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, 'Walk side left 1 Cycle', 'Walk side 1 Cycle.gif',sideLims)
-% animateWalk(longTime,twoCycleJntPosLeg1,twoCycleJntPosLeg2,twoCycleJntPosLeg3,twoCycleJntPosLeg4, 'Walk forward 2 Cycle', 'Walk forward 2 Cycle.gif',forLims)
-
-% animateWalk(longTime,transTimeJntPosLeg12,transTimeJntPosLeg22,transTimeJntPosLeg32,transTimeJntPosLeg42, ' Stickplot moving legs', 'Stickplot moving legs kinematic phase 2 cycles v3.gif')
-
-%% Plotting
-% figure('Name','Sine Wave Trajectory')
-% plot(posF_g(1,:),posF_g(2,:),'r-')
-% grid on
-% xlabel('y pos (in)')
-% ylabel('z pos (in)')
-% title('Sine Wave Trajectory wrt gnd')
-%
-% figure('Name','Y position over time')
-% plot(timeMat,posF_g(1,:),'r-')
-% grid on
-% xlabel('time (s)')
-% ylabel('y pos (in)')
-% title('Y position over time wrt gnd')
-%
-%
-% figure('Name','Y velocity over time')
-% plot(timeMat,velF_g(1,:),'r-')
-% grid on
-% xlabel('time (s)')
-% ylabel('dy vel (in/s)')
-% title('DY vel over time wrt gnd')
-%
-% figure('Name','z position over time')
-% plot(timeMat,posF_g(2,:),'r-')
-% grid on
-% xlabel('time (s)')
-% ylabel('z pos (in)')
-% title('z position over time wrt gnd')
-%
-% figure('Name','z velocity over time')
-% plot(timeMat,velF_g(2,:),'r-')
-% grid on
-% xlabel('time (s)')
-% ylabel('dz vel (in/s)')
-% title('Dz vel over time wrt gnd')
 
 
-
-
+end

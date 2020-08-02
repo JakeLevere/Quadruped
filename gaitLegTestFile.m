@@ -2,8 +2,10 @@
 clc; clear all; close all;
 %% Constants
 beta = 0.75; % duty factor
-yVel_bg = 4; % desired CG velocity of body (in/sec) ( moving forward in y direction wrt grnd)
-L = 4; % stride length (in)
+yVel_bg = -4; % desired CG velocity of body (in/sec) ( moving forward in y direction wrt grnd)
+xVel_bg = -4; % desired CG velocity of body (in/sec) ( moving forward in y direction wrt grnd)
+
+L = -4; % stride length (in)
 maxFootH = 3; % max foot height (in)
 homeBodH=5;
 
@@ -14,7 +16,8 @@ v0 = 0;
 vf = 0;
 
 %% return joint angles and  positions of legs in the transfer phase
-[AlphaT,BetaT,GammaT,p,tTJntPosLeg1,tTJntPosLeg2,tTJntPosLeg3,tTJntPosLeg4] = gaitLegTrajectFunction(beta,yVel_bg,L,homeBodH,maxFootH)
+[AlphaT,BetaT,GammaT,p,tTJntPosLeg1,tTJntPosLeg2,tTJntPosLeg3,tTJntPosLeg4] = gaitLegTrajectFunctionFwdBack(beta,yVel_bg,L,homeBodH,maxFootH)
+
 %% returns joint angles posiitons of leg in support phase
 [AlphaS,BetaS,GammaS,supJntPosLeg1,supJntPosLeg2,supJntPosLeg3,supJntPosLeg4] = parallelMoveTrajectV2([0;0;5;0;0;0], [0;1;5;0;0;0],t0,tf,tstep,v0,vf)
 %% plotting
@@ -49,6 +52,9 @@ for i = 1:length(time)
 end
 
 forLims = [-8,8;-8,16;0,8];
+backLims = [-8,8;-16,8;0,8];
 
-animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, 'Walk forward With Parallel', 'Walk forward with Parallel.gif',forLims)
+animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, 'Walk back With Parallel', 'Walk back with Parallel.gif',backLims)
 
+%% Left and right testing
+gaitlegTrajectFunctionLeftRight(beta,xVel_bg,L,homeBodH,maxFootH)

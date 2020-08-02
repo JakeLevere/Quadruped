@@ -32,8 +32,7 @@ for k = 1:length(Alpha(1,:))
     footPos1 = [footPos_b1(1)+xb_g(1,k);-footPos_b1(2)+yb_g(1);footPos_b1(3)+zb_g(1,k)];
     footPos2 = [footPos_b2(1)+xb_g(2,k);-footPos_b2(2)+yb_g(2);footPos_b2(3)+zb_g(2,k)];
     footPos3 = [-footPos_b3(1)+xb_g(3,k);footPos_b3(2)+yb_g(3);footPos_b3(3)+zb_g(3,k)];
-    footPos4 = [-footPos_b4(1)+xb_g(4,k);footPos_b4(2)+yb_g(4);footPos_b4(3)+zb_g(4,k)]
-    footPos_b4
+    footPos4 = [-footPos_b4(1)+xb_g(4,k);footPos_b4(2)+yb_g(4);footPos_b4(3)+zb_g(4,k)];
     
     % store each position in a 12xk array
     % rows 1-3 are hip, 4-6 are knee, 7-9 are ankle, 10-12 is foot pos
