@@ -14,9 +14,9 @@ function [leg1_alpha, leg2_alpha, leg3_alpha, leg4_alpha, ...
 % thigh_length = 3.4638;
 % hip_length = 1.5374;
 % Constant Robot Parameters
-shin_length = coxa;
+shin_length = tibia;
 thigh_length = femur;
-hip_length = tibia;
+hip_length = coxa;
 % 
 % top_diam = 5.23;
 % bot_diam = top_diam+(2*(hip_length+thigh_length));
