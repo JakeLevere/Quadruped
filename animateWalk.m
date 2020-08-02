@@ -2,12 +2,16 @@
 % this function plots the animation of the walking robot and saves it as a gif.
 % Front legs are light blue, back are dark blue
 % Given:list of joint positions for each leg, title and file name string
-function [] =animateWalk(timeMat,listOfJntPosLeg1,listOfJntPosLeg2,listOfJntPosLeg3,listOfJntPosLeg4, Title, fileName)
+function [] =animateWalk(timeMat,listOfJntPosLeg1,listOfJntPosLeg2,listOfJntPosLeg3,listOfJntPosLeg4, Title, fileName, limits)
 fig = figure('Name', Title);
 grid on
-xlim([-8,8])
-ylim([-8,16])
-zlim([0,8])
+xlim(limits(1,:))
+ylim(limits(2,:))
+zlim(limits(3,:))
+
+% xlim([-8,8])
+% ylim([-8,16])
+% zlim([0,8])
 hold on
 xlabel('X Position (in)');
 zlabel('Z Position (in)');
@@ -16,7 +20,7 @@ title(Title)
 filename= fileName;
 view(70,45);
 % view(0,90);
-% view(90,0);
+
 
 for i=1:length(timeMat)
     
