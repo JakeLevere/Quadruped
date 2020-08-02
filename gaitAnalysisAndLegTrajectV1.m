@@ -1,31 +1,33 @@
 %% Final Project Gait Analysis and Trajecotry Generation - Ethan Lauer
-clc; clear all; close all
-%% General and Dimension Constants
-numLegs = 4;
-% Leg Link Lengths (in)
-coxa = 1.5374;
-femur = 3.4638;
-tibia = 5.7477;
-
-% Platform diamters/Radii (in inches
-top_diam = 5.23;
-bot_diam = top_diam+(2*(coxa+femur));
-topR = top_diam/2;
-botR = bot_diam/2;
-
-% Home Position angles (for hip joints
-if false % isDeg
-    theta1Home = 53.64;% degrees
-    theta2Home = 54.02;% degrees
-else
-    theta1Home = deg2rad(53.64);% radians
-    theta2Home = deg2rad(54.02);% radians
-end
-
-[S, U] = SandUVectors(topR, botR, theta1Home, theta2Home, false);
-
-%% Trajectory Constants
-beta = 0.75; % duty factor
+function [alphaDeg,betaDeg,gammaDeg] = gaitAnalysisAndLegTrajectV1(numLegs,coxa,femur,tibia, ...
+    theta1Home,theta2Home,S,U,p,beta)
+%clc; clear all; close all
+% %% General and Dimension Constants
+% numLegs = 4;
+% % Leg Link Lengths (in)
+% coxa = 1.5374;
+% femur = 3.4638;
+% tibia = 5.7477;
+% 
+% % Platform diamters/Radii (in inches
+% top_diam = 5.23;
+% bot_diam = top_diam+(2*(coxa+femur));
+% topR = top_diam/2;
+% botR = bot_diam/2;
+% 
+% % Home Position angles (for hip joints
+% if false % isDeg
+%     theta1Home = 53.64;% degrees
+%     theta2Home = 54.02;% degrees
+% else
+%     theta1Home = deg2rad(53.64);% radians
+%     theta2Home = deg2rad(54.02);% radians
+% end
+% 
+% [S, U] = SandUVectors(topR, botR, theta1Home, theta2Home); %false
+% 
+% %% Trajectory Constants
+%beta = 0.75; % duty factor
 % beta = 0.5; % duty factor
 yVel_bg = 4; % desired CG velocity of body (in/sec) ( moving forward in y direction wrt grnd)
 u_fg = yVel_bg/(1-beta); % ave foot hor forward (y)vel wrt gnd (in/sec)
@@ -38,9 +40,10 @@ maxFootH = 3; % max foot height (in)
 % homeBodH = 5.7477; % max body height (inches) - home position
 homeBodH=5;
 zVel_bg = 0; % body is not moving vertically wrt gnd
-%% Timing constants
 
-% even time interavals between each point
+% %% Timing constants
+% 
+% % even time interavals between each point
 t0 = 0;
 t1 = deltaT;
 t2 = 2*deltaT;
@@ -48,22 +51,22 @@ t3 = 3*deltaT;
 t4 = 4*deltaT;
 timeMat = [t0,t1,t2,t3,t4];
 
-%% GAIT GENERATION
-p(1)=0; % Kinematic phase of leg 1
-p(2)=p(1)+1/2; % Kinematic phase of leg 2
-p(3)=p(1)+beta; % Kinematic phase of leg 3
-p(4)=p(2)+beta; % Kinematic phase of leg 4
-
-j=1;
-for j=1:4
-    for i=1:4
-        if p(i)>=1
-            p(i)=p(i)-1;
-        end
-    end
-    j=j+1;
-end
-p
+% %% GAIT GENERATION
+% p(1)=0; % Kinematic phase of leg 1
+% p(2)=p(1)+1/2; % Kinematic phase of leg 2
+% p(3)=p(1)+beta; % Kinematic phase of leg 3
+% p(4)=p(2)+beta; % Kinematic phase of leg 4
+% 
+% j=1;
+% for j=1:4
+%     for i=1:4
+%         if p(i)>=1
+%             p(i)=p(i)-1;
+%         end
+%     end
+%     j=j+1;
+% end
+% p
 
 
 %% Trajectory planning
@@ -72,11 +75,11 @@ vf =0;
 y0 =-L/2;
 yf = L/2; % should be at stride length at end of traject
 
-[ya0,ya1,ya2,ya3] = cubicTrajectConsts(t0,t4,y0,yf,v0,vf);
+[ya0,ya1,ya2,ya3] = cubicTrajectConsts(timeMat(1),timeMat(end),y0,yf,v0,vf);
 
 % using radians right now*************
 w = pi/L; % frequency so only looking at positive sine wave
-timeInterval = linspace(t0,t4);
+timeInterval = linspace(timeMat(1),timeMat(end));
 for i = 1:length(timeMat)
     t = timeMat(i);
     % get the y pos and vel values at this time period
@@ -100,6 +103,9 @@ end
 %  rows are legs, columns are instances in time
 for i = 1:numLegs
     for t=1:length(timeMat) % 5 is becaus of time dividing to 5 equal extents.
+        disp('debug')
+        disp(i)
+        disp(t)
         yb_g(i,t+1)=yb_g(i,t)+yVel_bg*deltaT;
         zb_g(i,t+1)=zb_g(i,t)+zVel_bg*deltaT;
     end
@@ -284,8 +290,8 @@ end
 
 forLims = [-8,8;-8,16;0,8];
 
-animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, 'Walk forward 1 Cycle', 'Walk forward 1 Cycle.gif',forLims)
-% animateWalk(longTime,twoCycleJntPosLeg1,twoCycleJntPosLeg2,twoCycleJntPosLeg3,twoCycleJntPosLeg4, 'Walk forward 2 Cycle', 'Walk forward 2 Cycle.gif',forLims)
+%animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, 'Walk forward 1 Cycle', 'Walk forward 1 Cycle.gif',forLims)
+animateWalk(longTime,twoCycleJntPosLeg1,twoCycleJntPosLeg2,twoCycleJntPosLeg3,twoCycleJntPosLeg4, 'Walk forward 2 Cycle', 'Walk forward 2 Cycle.gif',forLims)
 
 % animateWalk(longTime,transTimeJntPosLeg12,transTimeJntPosLeg22,transTimeJntPosLeg32,transTimeJntPosLeg42, ' Stickplot moving legs', 'Stickplot moving legs kinematic phase 2 cycles v3.gif')
 
@@ -326,6 +332,7 @@ animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cyc
 % ylabel('dz vel (in/s)')
 % title('Dz vel over time wrt gnd')
 
+end
 
 
 
