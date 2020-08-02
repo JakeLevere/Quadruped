@@ -7,7 +7,7 @@
 % returns the list of si2 vectors for each leg and the alpha matrix for all
 % the legs
 
-function [si2,alphai] = getSi2Alphai(si1,coxa,LiVect, isDeg)
+function [si2,alphai] = getSi2Alphai(si1,coxa,LiVect)
 % Home angles
 theta1DegHome = 53.64;% degrees
 theta1RadHome = deg2rad(theta1DegHome);% radians
@@ -31,50 +31,25 @@ alpha_leg3_4_upLimRad = deg2rad(alpha_leg3_4_upLimDeg);
 si2 = zeros(3,length(si1));
 Alphai = zeros(1,length(si1));
 for i =1:length(si1)
-    if isDeg
-        Alphai(i) = atand(LiVect(2,i)/LiVect(1,i));
-        si2(:,i) = [si1(1,i)+((-1)^i)*coxa*cosd(Alphai(i));
-            si1(2,i)+((-1)^i)*coxa*sind(Alphai(i));
-            si1(3,i)];
-    else
-        Alphai(i) = atan(LiVect(2,i)/LiVect(1,i));
-        si2(:,i) = [si1(1,i)+((-1)^i)*coxa*cos(Alphai(i));
-            si1(2,i)+((-1)^i)*coxa*sin(Alphai(i));
-            si1(3,i)];
-    end
+    
+    Alphai(i) = atan(LiVect(2,i)/LiVect(1,i));
+    si2(:,i) = [si1(1,i)+((-1)^i)*coxa*cos(Alphai(i));
+        si1(2,i)+((-1)^i)*coxa*sin(Alphai(i));
+        si1(3,i)];
 end
-if isDeg
-    alphai(1) = round(Alphai(1)+theta1DegHome,6);
-    alphai(2) = round(Alphai(2)-theta1DegHome,6);
-    alphai(3) = round(Alphai(3)-theta2DegHome,6);
-    alphai(4) = round(Alphai(4)+theta2DegHome,6);
-    
-    for i=1:4
-        if i==1||i==2
-            if alphai(i)<alpha_leg1_2_lowLimDeg || alphai(i)>alpha_leg1_2_upLimDeg
-                error('Alpha angle for legs 1 or 2 is out of range')
-            end
-        else
-            if alphai(i)<alpha_leg3_4_lowLimDeg || alphai(i)>alpha_leg3_4_upLimDeg
-                error('Alpha angle for legs 3 or 4 is out of range')
-            end
+
+alphai(1) = round(Alphai(1)+theta1RadHome,6);
+alphai(2) = round(Alphai(2)-theta1RadHome,6);
+alphai(3) = round(Alphai(3)-theta2RadHome,6);
+alphai(4) = round(Alphai(4)+theta2RadHome,6);
+for i=1:4
+    if i==1||i==2
+        if alphai(i)<alpha_leg1_2_lowLimRad || alphai(i)>alpha_leg1_2_upLimRad
+            error('Alpha angle for legs 1 or 2 is out of range')
         end
-    end
-    
-else
-    alphai(1) = round(Alphai(1)+theta1RadHome,6);
-    alphai(2) = round(Alphai(2)-theta1RadHome,6);
-    alphai(3) = round(Alphai(3)-theta2RadHome,6);
-    alphai(4) = round(Alphai(4)+theta2RadHome,6);
-    for i=1:4
-        if i==1||i==2
-            if alphai(i)<alpha_leg1_2_lowLimRad || alphai(i)>alpha_leg1_2_upLimRad
-                error('Alpha angle for legs 1 or 2 is out of range')
-            end
-        else
-            if alphai(i)<alpha_leg3_4_lowLimRad || alphai(i)>alpha_leg3_4_upLimRad
-                error('Alpha angle for legs 3 or 4 is out of range')
-            end
+    else
+        if alphai(i)<alpha_leg3_4_lowLimRad || alphai(i)>alpha_leg3_4_upLimRad
+            error('Alpha angle for legs 3 or 4 is out of range')
         end
     end
 end
