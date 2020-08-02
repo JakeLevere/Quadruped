@@ -25,8 +25,8 @@ end
 [S, U] = SandUVectors(topR, botR, theta1Home, theta2Home, false);
 
 %% Trajectory Constants
-% beta = 0.75; % duty factor
-beta = 0.5; % duty factor
+beta = 0.75; % duty factor
+% beta = 0.5; % duty factor
 yVel_bg = 4; % desired CG velocity of body (in/sec) ( moving forward in y direction wrt grnd)
 u_fg = yVel_bg/(1-beta); % ave foot hor forward (y)vel wrt gnd (in/sec)
 L = 4; % stride length (in)
@@ -63,7 +63,7 @@ for j=1:4
     end
     j=j+1;
 end
-p;
+p
 
 
 %% Trajectory planning
@@ -150,9 +150,9 @@ gammaDeg=Gamma*180/pi
 % this is just one cycle time
 time = linspace(0,T,10);
 for i=1:numLegs
+    xHipB_G(i,1) =S(1,i);
     yHipB_G(i,1) = S(2,i);
     zHipB_G(i,1) = homeBodH;
-    xHipB_G(i,1) =S(1,i); % dont want to move laterally in the x direction??????????????????????????????????
 end
 % get hip positions for the full phase since you are moving constantly
 for i = 1:numLegs
@@ -248,48 +248,44 @@ end
 
 % this is for 0.75 duty factor
 %
-% time = linspace(0,1,16);
-% for i = 1:length(time)
-%     t = time(i); % current time
-%
-%     if t>=0 && t<p(4) %leg 4 moves
-%         cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,i);
-%         cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,1);
-%         cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,1);
-%         cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
-%     end
-%     if t>p(4) && t<p(2) %leg 2 moves
-%         cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,i-4);
-%         cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
-%         cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,1);
-%         cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
-%     end
-%     if t>p(2) && t<p(3) % leg 3 moves
-%         cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,i-8);
-%         cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
-%         cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,end);
-%         cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
-%     end
-%     if t>p(3) && t<=time(end)% leg 1 moves
-%         cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,i-11);
-%         cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,end);
-%         cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
-%         cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,end);
-%     end
-% end
+time = linspace(0,1,16);
+for i = 1:length(time)
+    t = time(i); % current time
+
+    if t>=0 && t<p(4) %leg 4 moves
+        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,i);
+        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,1);
+        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,1);
+        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
+    end
+    if t>p(4) && t<p(2) %leg 2 moves
+        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,i-4);
+        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
+        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,1);
+        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
+    end
+    if t>p(2) && t<p(3) % leg 3 moves
+        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,i-8);
+        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
+        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,end);
+        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,1);
+    end
+    if t>p(3) && t<=time(end)% leg 1 moves
+        cycleTimeJntPosLeg1(:,i)= transTimeJntPosLeg1(:,i-11);
+        cycleTimeJntPosLeg2(:,i)= transTimeJntPosLeg2(:,end);
+        cycleTimeJntPosLeg4(:,i)= transTimeJntPosLeg4(:,end);
+        cycleTimeJntPosLeg3(:,i)= transTimeJntPosLeg3(:,end);
+    end
+end
 
 
 %% then get theta dot afterwards as well. ********************
 %% animated Stickplot
-% animateWalk(timeMat,transTimeJntPosLeg1,transTimeJntPosLeg2,transTimeJntPosLeg3,transTimeJntPosLeg4, ' Stickplot moving legs', 'Stickplot moving legs.gif')
 
-% xlim([-8,8])
-% ylim([-8,16])
-% zlim([0,8])
 forLims = [-8,8;-8,16;0,8];
 
 animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, 'Walk forward 1 Cycle', 'Walk forward 1 Cycle.gif',forLims)
-animateWalk(longTime,twoCycleJntPosLeg1,twoCycleJntPosLeg2,twoCycleJntPosLeg3,twoCycleJntPosLeg4, 'Walk forward 2 Cycle', 'Walk forward 2 Cycle.gif',forLims)
+% animateWalk(longTime,twoCycleJntPosLeg1,twoCycleJntPosLeg2,twoCycleJntPosLeg3,twoCycleJntPosLeg4, 'Walk forward 2 Cycle', 'Walk forward 2 Cycle.gif',forLims)
 
 % animateWalk(longTime,transTimeJntPosLeg12,transTimeJntPosLeg22,transTimeJntPosLeg32,transTimeJntPosLeg42, ' Stickplot moving legs', 'Stickplot moving legs kinematic phase 2 cycles v3.gif')
 
