@@ -15,5 +15,4 @@ for j=1:4
     end
     j=j+1;
 end
-p
 end
