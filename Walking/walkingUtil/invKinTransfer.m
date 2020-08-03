@@ -2,7 +2,7 @@
 
 function [Alpha,Beta,Gamma] = invKinTransfer(xf_H,yf_H,zf_H,timeMat, coxa,femur,tibia)
 for i=1:4 % for all 4 legs
-    for j=1:length(timeMat) % time discrete
+    for j=1:length(timeMat) % time 
         Alpha(i,j)=(atan2(yf_H(i,j),xf_H(i,j)));
         l(i,j)=sqrt(yf_H(i,j)^2+xf_H(i,j)^2);
         d(i,j)=sqrt(zf_H(i,j)^2+(l(i,j)-coxa)^2);

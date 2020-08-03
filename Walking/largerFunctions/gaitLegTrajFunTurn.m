@@ -1,7 +1,7 @@
-%% Turning - Ethan Lauer
-clc; clear all; close all;
+%% Turning
+% Generate gait and leg trajectory for turning
 
-
+function [Alpha,Beta,Gamma,p,tTJntPosLeg1,tTJntPosLeg2,tTJntPosLeg3,tTJntPosLeg4] = gaitLegTrajFunTurn(beta,angVelZ,strideRot,constHeight, maxFH)
 %% General and Dimension Constants
 numLegs = 4;
 % Leg Link Lengths (in)
@@ -23,19 +23,17 @@ theta2Home = deg2rad(54.02);% radians
 [S, ~] = SandUVectors(topR, botR, theta1Home, theta2Home);
 
 %% Trajectory Constants
-beta = 0.75; % duty factor
-zWVel_bg = pi/4; % desired angular velocity (rad/sec)
-Rad = pi/4; % stride length (rotation amount in radians)
+zWVel_bg = angVelZ; % desired angular velocity (rad/sec)
+Rad = strideRot; % stride length (rotation amount in radians)
 T = Rad/zWVel_bg; % cycle time
 transferTime=(1-beta)*T;
 deltaT = transferTime/4; % 4 different intervals, 5 points
-maxFootH = 3; % max foot height (in)
-homeBodH=5;%5.7477;
+maxFootH = maxFH; % max foot height (in)
+homeBodH=constHeight;%5.7477;
 zVel_bg = 0; % body is not moving vertically wrt gnd
 xyVel_bg = zWVel_bg*botR; % linear velocity of body in the xy plane
 
 arcLength = D*Rad; % might have to change botR to what ever the Radius we want to be at
-
 
 %% Timing constants
 
@@ -82,8 +80,6 @@ for i = 1:length(timeMat)
     velF_g(:,i) = [dxval;dyval;dzval];
 end
 
-posF_g
-
 %% x y and z position of body wrt ground
 % rows are legs, columns are instances in time initialize to home position
 for i=1:numLegs
@@ -117,9 +113,6 @@ for i = 1:numLegs
     end
 end
 
-xf_b
-yf_b
-zf_b
 for i =1:numLegs
     % rotation of hip wrt body is z rotation matrix
     for k =1:length(timeMat)
@@ -128,52 +121,11 @@ for i =1:numLegs
         zf_H(i,k)=zf_b(i,k);
     end
 end
-xf_H
-yf_H
-zf_H
-
 
 %% Inverse Kinematics
-[Alpha,Beta,Gamma] = invKinTransfer(xf_H,yf_H,zf_H,timeMat, coxa,femur,tibia)
+[Alpha,Beta,Gamma] = invKinTransfer(xf_H,yf_H,zf_H,timeMat, coxa,femur,tibia);
 %% get joint positions for plotting
 [tTJntPosLeg1,tTJntPosLeg2,tTJntPosLeg3,tTJntPosLeg4] = getJntPosInTransTimeTurn(Alpha,Beta,Gamma,coxa,femur,tibia, xb_g, yb_g,zb_g);
-
-% this is for 0.75 duty factor
-%
-time = linspace(0,1,16);
-for i = 1:length(time)
-    t = time(i); % current time
-    
-    if t>=0 && t<p(4) %leg 4 moves
-        cycleTimeJntPosLeg4(:,i)= tTJntPosLeg4(:,i);
-        cycleTimeJntPosLeg2(:,i)= tTJntPosLeg2(:,1);
-        cycleTimeJntPosLeg3(:,i)= tTJntPosLeg3(:,1);
-        cycleTimeJntPosLeg1(:,i)= tTJntPosLeg1(:,1);
-    end
-    if t>p(4) && t<p(2) %leg 2 moves
-        cycleTimeJntPosLeg2(:,i)= tTJntPosLeg2(:,i-4);
-        cycleTimeJntPosLeg4(:,i)= tTJntPosLeg4(:,end);
-        cycleTimeJntPosLeg3(:,i)= tTJntPosLeg3(:,1);
-        cycleTimeJntPosLeg1(:,i)= tTJntPosLeg1(:,1);
-    end
-    if t>p(2) && t<p(3) % leg 3 moves
-        cycleTimeJntPosLeg3(:,i)= tTJntPosLeg3(:,i-8);
-        cycleTimeJntPosLeg4(:,i)= tTJntPosLeg4(:,end);
-        cycleTimeJntPosLeg2(:,i)= tTJntPosLeg2(:,end);
-        cycleTimeJntPosLeg1(:,i)= tTJntPosLeg1(:,1);
-    end
-    if t>p(3) && t<=time(end)% leg 1 moves
-        cycleTimeJntPosLeg1(:,i)= tTJntPosLeg1(:,i-11);
-        cycleTimeJntPosLeg2(:,i)= tTJntPosLeg2(:,end);
-        cycleTimeJntPosLeg4(:,i)= tTJntPosLeg4(:,end);
-        cycleTimeJntPosLeg3(:,i)= tTJntPosLeg3(:,end);
-    end
-end
-
-%% animate
-forLims = [-10,10;-10,10;0,8];
-
-animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cycleTimeJntPosLeg4, 'Turn left 1 Cycle', 'turnLeft 1 Cycle.gif',forLims)
 
 
 %% Plotting
@@ -252,3 +204,8 @@ animateWalk(time,cycleTimeJntPosLeg1,cycleTimeJntPosLeg2,cycleTimeJntPosLeg3,cyc
 % title('Dz vel over time wrt gnd')
 
 
+
+
+
+
+end
