@@ -76,8 +76,9 @@ u3 = U(:,3);
 u4 = U(:,4);
 
 %% Parallel Movement - Simulink 
+
 homePose = [0;0;6;0;0;0];
-goalPose = [0;2;7;0;0;0];
+goalPose = [0;0;5;0.5;0;0];
 timerange = seconds(linspace(0,4,100));
 [allAlphai,allBetai,allGammai,supJntPosLeg1,supJntPosLeg2,supJntPosLeg3,supJntPosLeg4] = parallelMoveTrajectV2(homePose, goalPose,0,4,100,0,0);
 
@@ -105,7 +106,6 @@ simOut = sim('Simulink/Quadruped_Simulink_Parallel', 'ReturnWorkspaceOutputs', '
     theta1Home,theta2Home,S,U,p,beta);
 
 %% Walk forward - Simulink
-
 [leg1_alpha, leg2_alpha, leg3_alpha, leg4_alpha, ...
     leg1_beta, leg2_beta, leg3_beta, leg4_beta, ...
     leg1_gamma, leg2_gamma, leg3_gamma, leg4_gamma,hip_length,shin_length,thigh_length] = ... 
@@ -131,6 +131,7 @@ simOut = sim('Quadruped_Simulink_Walking','ReturnWorkspaceOutputs','on');
 
 pause(10);
 
+
 %% Walk sideways - Matlab
 
 
@@ -138,7 +139,7 @@ pause(10);
     theta1Home,theta2Home,S,U,p,beta);
 
 %% Walk sideways - Simulink
-alphaDeg = [-alphaDeg(1,:); -alphaDeg(2,:); -alphaDeg(3,:); -alphaDeg(4,:)]
+alphaDeg = [-alphaDeg(1,:)+180; -alphaDeg(2,:); -alphaDeg(3,:); -alphaDeg(4,:)+180]
 
 [leg1_alpha, leg2_alpha, leg3_alpha, leg4_alpha, ...
     leg1_beta, leg2_beta, leg3_beta, leg4_beta, ...
