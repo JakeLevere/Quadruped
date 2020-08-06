@@ -77,24 +77,24 @@ u4 = U(:,4);
 
 %% Parallel Movement - Simulink 
 homePose = [0;0;6;0;0;0];
-goalPose = [0;0;7;0;0;0];
+goalPose = [0;2;7;0;0;0];
 timerange = seconds(linspace(0,4,100));
 [allAlphai,allBetai,allGammai,supJntPosLeg1,supJntPosLeg2,supJntPosLeg3,supJntPosLeg4] = parallelMoveTrajectV2(homePose, goalPose,0,4,100,0,0);
 
-leg1_alpha = timetable(-[allAlphai(1,:)-53.64].', 'rowTimes', timerange.');
-leg2_alpha = timetable(-[allAlphai(2,:)+54.02].', 'rowTimes', timerange.');
-leg3_alpha = timetable(-[allAlphai(3,:)+53.64].', 'rowTimes', timerange.');
-leg4_alpha = timetable(-[allAlphai(4,:)-54.02].', 'rowTimes', timerange.');
+leg1_alpha = timetable(-[allAlphai(1,:)].', 'rowTimes', timerange.');
+leg2_alpha = timetable(-[allAlphai(2,:)].', 'rowTimes', timerange.');
+leg3_alpha = timetable(-[allAlphai(3,:)].', 'rowTimes', timerange.');
+leg4_alpha = timetable(-[allAlphai(4,:)].', 'rowTimes', timerange.');
 
 leg1_beta = timetable(allBetai(1,:).', 'rowTimes', timerange.');
 leg2_beta = timetable(allBetai(2,:).', 'rowTimes', timerange.');
 leg3_beta = timetable(allBetai(3,:).', 'rowTimes', timerange.');
 leg4_beta = timetable(allBetai(4,:).', 'rowTimes', timerange.');
 
-leg1_gamma = timetable(allGammai(1,:).'-90, 'rowTimes', timerange.');
-leg2_gamma = timetable(allGammai(2,:).'-90, 'rowTimes', timerange.');
-leg3_gamma = timetable(allGammai(3,:).'-90, 'rowTimes', timerange.');
-leg4_gamma = timetable(allGammai(4,:).'-90, 'rowTimes', timerange.');
+leg1_gamma = timetable(allGammai(1,:).'-pi/2, 'rowTimes', timerange.');
+leg2_gamma = timetable(allGammai(2,:).'-pi/2, 'rowTimes', timerange.');
+leg3_gamma = timetable(allGammai(3,:).'-pi/2, 'rowTimes', timerange.');
+leg4_gamma = timetable(allGammai(4,:).'-pi/2, 'rowTimes', timerange.');
 
 
 simOut = sim('Simulink/Quadruped_Simulink_Parallel', 'ReturnWorkspaceOutputs', 'on');
