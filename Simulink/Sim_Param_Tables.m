@@ -140,10 +140,10 @@ alpha(3, 13:end) = alpha3(1:4);
 alpha(3, 1:8) = alpha3(end-7: end);
 
 secondtime = seconds([time 1+time 2+time]);
-leg1_alpha = timetable([alpha(1,:).';alpha(1,:).';alpha(1,:).'], 'rowTimes', secondtime);
-leg2_alpha = timetable([alpha(2,:).'; alpha(2,:).';alpha(2,:).'], 'rowTimes', secondtime);
-leg3_alpha = timetable([alpha(3,:).'; alpha(3,:).';alpha(3,:).'], 'rowTimes', secondtime);
-leg4_alpha = timetable([alpha(4,:).'; alpha(4,:).'; alpha(4,:).'], 'rowTimes', secondtime);
+leg1_alpha = timetable(-[alpha(1,:).';alpha(1,:).';alpha(1,:).']-53.64, 'rowTimes', secondtime);
+leg2_alpha = timetable(-[alpha(2,:).'; alpha(2,:).';alpha(2,:).']+54.02, 'rowTimes', secondtime);
+leg3_alpha = timetable(-[alpha(3,:).'; alpha(3,:).';alpha(3,:).']+53.64, 'rowTimes', secondtime);
+leg4_alpha = timetable(-[alpha(4,:).'; alpha(4,:).'; alpha(4,:).']-54.02, 'rowTimes', secondtime);
 
 leg1_beta = timetable([beta(1,:).';beta(1,:).';beta(1,:).'], 'rowTimes', secondtime);
 leg2_beta = timetable([beta(2,:).';beta(2,:).';beta(2,:).'], 'rowTimes', secondtime);
@@ -154,3 +154,10 @@ leg1_gamma = timetable([gamma(1,:).';gamma(1,:).';gamma(1,:).']-90, 'rowTimes', 
 leg2_gamma = timetable([gamma(2,:).';gamma(2,:).';gamma(2,:).']-90, 'rowTimes', secondtime);
 leg3_gamma = timetable([gamma(3,:).';gamma(3,:).';gamma(3,:).']-90, 'rowTimes', secondtime);
 leg4_gamma = timetable([gamma(4,:).';gamma(4,:).';gamma(4,:).']-90, 'rowTimes', secondtime);
+
+v = 10.16; %cm/s
+periodtime = linspace(0, 4, 100);
+for i =  1:length(periodtime)
+    tv = periodtime(i);
+    vrange(i) = v*tv;    
+end
