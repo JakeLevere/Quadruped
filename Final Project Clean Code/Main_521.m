@@ -67,19 +67,59 @@ u4 = U(:,4);
 % each leg must move to during the trajectory and also produces a stickplot
 % gif of the robot moving.
 
-% vertMaxSetPoint = [0;0;8;0;0;0];
-% vertMinSetPoint = [0;0;4.9;0;0;0];
-% [vertMaxAlpha,vertMaxBeta,vertMaxGamma] = parallelMoveTrajectV1(homePose, vertMaxSetPoint,isDeg,t0,tf,tstep,v0,vf,'Home to [0;0;8;0;0;0]','Home to vertMaxSetPoint.gif')
-% [vertMinAlpha,vertMinBeta,vertMinGamma] = parallelMoveTrajectV1(homePose, vertMinSetPoint,isDeg,t0,tf,tstep,v0,vf,'Home to [0;0;4.9;0;0;0]','Home to vertMinSetPoint.gif')
-% 
-% 
-% randSetPoint1 = [0;2;5;-5;5;-45];
-% randSetPoint2 = [1;0.5;4.9;0;0;45];
-% randSetPoint3 = [2.5;0;6;-15;25;0];
-% [randPt1Alpha,randPt1Beta,randPt1Gamma] = parallelMoveTrajectV1(homePose, randSetPoint1,isDeg,t0,tf,tstep,v0,vf,'Home to [0;2;5;-5;5;-45]','Home to randSetPoint1.gif')
-% [randPt2Alpha,randPt2Beta,randPt2Gamma] = parallelMoveTrajectV1(homePose, randSetPoint2,isDeg,t0,tf,tstep,v0,vf,'Home to [1;0.5;4.9;0;0;45]','Home to randSetPoint2.gif')
-% [randPt3Alpha,randPt3Beta,randPt3Gamma] = parallelMoveTrajectV1(homePose, randSetPoint3,isDeg,t0,tf,tstep,v0,vf,'Home to [2.5;0;6;-15;25;0]','Home to randSetPoint3.gif')
-% 
+vertMaxSetPoint = [0;0;8;0;0;0];
+vertMinSetPoint = [0;0;4.9;0;0;0];
+
+% Max height - Matlab and Simulink
+[vertMaxAlpha,vertMaxBeta,vertMaxGamma] = parallelMoveTrajectV1(homePose, vertMaxSetPoint,isDeg,t0,tf,tstep,v0,vf,'Home to [0;0;8;0;0;0]','Home to vertMaxSetPoint.gif')
+
+[leg1_alpha,leg2_alpha,leg3_alpha,leg4_alpha,...
+    leg1_beta,leg2_beta,leg3_beta,leg4_beta,...
+    leg1_gamma,leg2_gamma,leg3_gamma,leg4_gamma,hip_length,shin_length,thigh_length] = Sim_Param_Tables_Parallel(vertMaxAlpha,vertMaxBeta,vertMaxGamma,tibia,femur,coxa);
+
+simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
+pause(10);
+
+% Minimum height - Matlab and Simulink
+[vertMinAlpha,vertMinBeta,vertMinGamma] = parallelMoveTrajectV1(homePose, vertMinSetPoint,isDeg,t0,tf,tstep,v0,vf,'Home to [0;0;4.9;0;0;0]','Home to vertMinSetPoint.gif')
+
+[leg1_alpha,leg2_alpha,leg3_alpha,leg4_alpha,...
+    leg1_beta,leg2_beta,leg3_beta,leg4_beta,...
+    leg1_gamma,leg2_gamma,leg3_gamma,leg4_gamma,hip_length,shin_length,thigh_length] = Sim_Param_Tables_Parallel(vertMinAlpha,vertMinBeta,vertMinGamma,tibia,femur,coxa);
+
+simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
+pause(10);
+
+% Twisting - Matlab and Simulink
+randSetPoint1 = [0;2;5;-5;5;-45];
+randSetPoint2 = [1;0.5;4.9;0;0;45];
+randSetPoint3 = [2.5;0;6;-15;25;0];
+[randPt1Alpha,randPt1Beta,randPt1Gamma] = parallelMoveTrajectV1(homePose, randSetPoint1,isDeg,t0,tf,tstep,v0,vf,'Home to [0;2;5;-5;5;-45]','Home to randSetPoint1.gif')
+
+[leg1_alpha,leg2_alpha,leg3_alpha,leg4_alpha,...
+    leg1_beta,leg2_beta,leg3_beta,leg4_beta,...
+    leg1_gamma,leg2_gamma,leg3_gamma,leg4_gamma,hip_length,shin_length,thigh_length] = Sim_Param_Tables_Parallel(randPt1Alpha,randPt1Beta,randPt1Gamma,tibia,femur,coxa);
+
+simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
+pause(10);
+
+[randPt2Alpha,randPt2Beta,randPt2Gamma] = parallelMoveTrajectV1(homePose, randSetPoint2,isDeg,t0,tf,tstep,v0,vf,'Home to [1;0.5;4.9;0;0;45]','Home to randSetPoint2.gif')
+
+[leg1_alpha,leg2_alpha,leg3_alpha,leg4_alpha,...
+    leg1_beta,leg2_beta,leg3_beta,leg4_beta,...
+    leg1_gamma,leg2_gamma,leg3_gamma,leg4_gamma,hip_length,shin_length,thigh_length] = Sim_Param_Tables_Parallel(randPt2Alpha,randPt2Beta,randPt2Gamma,tibia,femur,coxa);
+
+simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
+pause(10);
+
+[randPt3Alpha,randPt3Beta,randPt3Gamma] = parallelMoveTrajectV1(homePose, randSetPoint3,isDeg,t0,tf,tstep,v0,vf,'Home to [2.5;0;6;-15;25;0]','Home to randSetPoint3.gif')
+
+[leg1_alpha,leg2_alpha,leg3_alpha,leg4_alpha,...
+    leg1_beta,leg2_beta,leg3_beta,leg4_beta,...
+    leg1_gamma,leg2_gamma,leg3_gamma,leg4_gamma,hip_length,shin_length,thigh_length] = Sim_Param_Tables_Parallel(randPt3Alpha,randPt3Beta,randPt3Gamma,tibia,femur,coxa);
+
+simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
+pause(10);
 
 %% Walking Simulation Constants/Variables
 beta = 0.75; % duty factor
@@ -129,7 +169,6 @@ Gamma_F = rad2deg(Gamma_F);
    leg1_gamma, leg2_gamma, leg3_gamma, leg4_gamma,hip_length,shin_length,thigh_length] = ... 
    Sim_Param_Tables(Alpha_F,Beta_F,Gamma_F,p_F,coxa,femur,tibia);
 
-%simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 simOut = sim('Quadruped_Simulink_Walking','ReturnWorkspaceOutputs','on');
 
 pause(10);
@@ -152,7 +191,6 @@ Gamma_B = rad2deg(Gamma_B);
     leg1_gamma, leg2_gamma, leg3_gamma, leg4_gamma,hip_length,shin_length,thigh_length] = ... 
     Sim_Param_Tables(Alpha_B,Beta_B,Gamma_B,p_B,coxa,femur,tibia);
 
-%simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 simOut = sim('Quadruped_Simulink_Walking','ReturnWorkspaceOutputs','on');
 
 pause(10);
@@ -175,7 +213,6 @@ Gamma_R = rad2deg(Gamma_R);
     leg1_gamma, leg2_gamma, leg3_gamma, leg4_gamma,hip_length,shin_length,thigh_length] = ... 
     Sim_Param_Tables_Sides(Alpha_R,Beta_R,Gamma_R,p_R,coxa,femur,tibia);
 
-%simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 simOut = sim('Quadruped_Simulink_Walking','ReturnWorkspaceOutputs','on');
 
 % % Walk Left - Matlab
@@ -196,7 +233,6 @@ Gamma_L = rad2deg(Gamma_L);
     leg1_gamma, leg2_gamma, leg3_gamma, leg4_gamma,hip_length,shin_length,thigh_length] = ... 
     Sim_Param_Tables_Sides(Alpha_L,Beta_L,Gamma_L,p_L,coxa,femur,tibia);
 
-%simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 simOut = sim('Quadruped_Simulink_Walking','ReturnWorkspaceOutputs','on');
 
 % % Rotating Left - Matlab
@@ -217,7 +253,6 @@ Gamma_RL = rad2deg(Gamma_RL);
     leg1_gamma, leg2_gamma, leg3_gamma, leg4_gamma,hip_length,shin_length,thigh_length] = ... 
     Sim_Param_Tables_Turn(Alpha_RL,Beta_RL,Gamma_RL,p_RL,coxa,femur,tibia);
 
-%simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 simOut = sim('Quadruped_Simulink_Walking','ReturnWorkspaceOutputs','on');
 
 % Rotating Right - Matlab
@@ -238,5 +273,4 @@ Gamma_RR = rad2deg(Gamma_RR);
    leg1_gamma, leg2_gamma, leg3_gamma, leg4_gamma,hip_length,shin_length,thigh_length] = ... 
    Sim_Param_Tables_Turn(Alpha_RR,Beta_RR,Gamma_RR,p_RR,coxa,femur,tibia);
 
-%simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 simOut = sim('Quadruped_Simulink_Walking','ReturnWorkspaceOutputs','on');
