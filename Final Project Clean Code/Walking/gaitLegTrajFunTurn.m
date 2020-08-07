@@ -26,30 +26,31 @@
 %         tTJntPosLeg4- list of leg 4 joint positions in 3D space during the
 %         transfer time (12xn)
 
-function [Alpha,Beta,Gamma,p,tTJntPosLeg1,tTJntPosLeg2,tTJntPosLeg3,tTJntPosLeg4] = gaitLegTrajFunTurn(beta,angVelZ,strideRot,constHeight, maxFH)
+function [Alpha,Beta,Gamma,p,tTJntPosLeg1,tTJntPosLeg2,tTJntPosLeg3,tTJntPosLeg4,timeMat,alphaVels,betaVels,gammaVels,posF_g,velF_g] = gaitLegTrajFunTurn(numLegs,coxa,femur,tibia,S,U,theta1Home,theta2Home,botR,topR,beta,angVelZ,strideRot,constHeight,maxFH)
 %% 
-% General and Dimension Constants
-numLegs = 4;
-% Leg Link Lengths (in)
-coxa = 1.5374;
-femur = 3.4638;
-tibia = 5.7477;
-
-% Platform diamters/Radii (in inches
-top_diam = 5.23;
-bot_diam = top_diam+(2*(coxa+femur));
-topR = top_diam/2;
-botR = bot_diam/2;
-D = coxa+femur; 
-
-% Home Position angles (for hip joints
-theta1Home = deg2rad(53.64);% radians
-theta2Home = deg2rad(54.02);% radians
-
-[S, ~] = SandUVectors(topR, botR, theta1Home, theta2Home);
+% % General and Dimension Constants
+% numLegs = 4;
+% % Leg Link Lengths (in)
+% coxa = 1.5374;
+% femur = 3.4638;
+% tibia = 5.7477;
+% 
+% % Platform diamters/Radii (in inches
+% top_diam = 5.23;
+% bot_diam = top_diam+(2*(coxa+femur));
+% topR = top_diam/2;
+% botR = bot_diam/2;
+% D = coxa+femur; 
+% 
+% % Home Position angles (for hip joints
+% theta1Home = deg2rad(53.64);% radians
+% theta2Home = deg2rad(54.02);% radians
+% 
+% [S, ~] = SandUVectors(topR, botR, theta1Home, theta2Home);
 
 %% 
 % Trajectory Constants
+D = coxa+femur;
 zWVel_bg = angVelZ; % desired angular velocity (rad/sec)
 Rad = strideRot; % stride length (rotation amount in radians)
 T = Rad/zWVel_bg; % cycle time
@@ -205,172 +206,172 @@ gammaVels = dq(:,:,3)
 % Plotting
 
 %%
-% Foot and Body Trajectory
-trajFig = figure('Name','Circle Trajectory with sin');
-plot3(posF_g(1,:),posF_g(2,:),posF_g(3,:),'k-')
-hold on
-plot3(xb_g(1,:), yb_g(1,:),zb_g(1,:),'-r')
-hold on
-plot3(xb_g(2,:), yb_g(2,:),zb_g(2,:),'-g')
-hold on
-plot3(xb_g(3,:), yb_g(3,:),zb_g(3,:),'-b')
-hold on
-plot3(xb_g(4,:), yb_g(4,:),zb_g(4,:),'-c')
-hold on
-legend('Foot','Hip1','Hip2','Hip3','Hip4')
-xlim([-8,8]);
-ylim([-8,8]);
-grid on
-xlabel('x pos (in)')
-ylabel('y pos (in)')
-title('Circle Trajectory with sine wrt gnd')
-saveas(trajFig,'Turning Trajectories.png')
-
-%%
-% Foot Positions and Velocities
-foot6Fig = figure('Name','Foot Positions and Velocities wrt Gnd Turning');
-subplot(3,2,1)
-plot(timeMat,posF_g(1,:),'r-')
-grid on
-xlabel('time (s)')
-ylabel('x pos (in)')
-title('X pos vs time wrt gnd')
-
-subplot(3,2,2)
-plot(timeMat,velF_g(1,:),'r-')
-grid on
-xlabel('time (s)')
-ylabel('dX vel (in/s)')
-title('DX vel vs time wrt gnd')
-
-subplot(3,2,3)
-plot(timeMat,posF_g(2,:),'r-')
-grid on
-xlabel('time (s)')
-ylabel('y pos (in)')
-title('Y pos vs time wrt gnd')
-
-subplot(3,2,4)
-plot(timeMat,velF_g(2,:),'r-')
-grid on
-xlabel('time (s)')
-ylabel('dy vel (in/s)')
-title('DY vel vs time wrt gnd')
-
-subplot(3,2,5)
-plot(timeMat,posF_g(3,:),'r-')
-grid on
-xlabel('time (s)')
-ylabel('z pos (in)')
-title('Z pos vs time wrt gnd')
-
-subplot(3,2,6)
-plot(timeMat,velF_g(3,:),'r-')
-grid on
-xlabel('time (s)')
-ylabel('dz vel (in/s)')
-title('Dz vel vs time wrt gnd')
-saveas(foot6Fig,'Turning Foot Pos and Vel.png')
-
-
-%%
-% Joint Positions and Velocities
-jntPosFig = figure('Name','Joint Positions vs time turning');
-subplot(3,1,1)
-plot(timeMat,Alpha(1,:),'r-')
-hold on
-plot(timeMat,Alpha(2,:),'g-')
-hold on
-plot(timeMat,Alpha(3,:),'b-')
-hold on
-plot(timeMat,Alpha(4,:),'c-')
-hold on
-grid on
-legend('Leg 1','Leg 2','Leg 3','Leg 4')
-xlabel('time (s)')
-ylabel('Alpha pos (rad)')
-title('Alpha Positions vs time')
-
-subplot(3,1,2)
-plot(timeMat,Beta(1,:),'r-')
-hold on
-plot(timeMat,Beta(2,:),'g-')
-hold on
-plot(timeMat,Beta(3,:),'b-')
-hold on
-plot(timeMat,Beta(4,:),'c-')
-hold on
-grid on
-legend('Leg 1','Leg 2','Leg 3','Leg 4')
-grid on
-xlabel('time (s)')
-ylabel('Beta pos (rad)')
-title('Beta Positions vs time')
-
-subplot(3,1,3)
-plot(timeMat,Gamma(1,:),'r-')
-hold on
-plot(timeMat,Gamma(2,:),'g-')
-hold on
-plot(timeMat,Gamma(3,:),'b-')
-hold on
-plot(timeMat,Gamma(4,:),'c-')
-hold on
-grid on
-legend('Leg 1','Leg 2','Leg 3','Leg 4')
-grid on
-xlabel('time (s)')
-ylabel('Gamma pos (rad/s)')
-title('Gamma Positions vs time')
-saveas(jntPosFig,'Joint Positions vs timeturning.png')
-
-jntVelFig = figure('Name','Joint Velocities vs time turning');
-subplot(3,1,1)
-plot(timeMat,alphaVels(1,:),'r-')
-hold on
-plot(timeMat,alphaVels(2,:),'g-')
-hold on
-plot(timeMat,alphaVels(3,:),'b-')
-hold on
-plot(timeMat,alphaVels(4,:),'c-')
-hold on
-grid on
-legend('Leg 1','Leg 2','Leg 3','Leg 4')
-xlabel('time (s)')
-ylabel('Alpha vel (rad/s)')
-title('Alpha Velocities vs time')
-
-subplot(3,1,2)
-plot(timeMat,betaVels(1,:),'r-')
-hold on
-plot(timeMat,betaVels(2,:),'g-')
-hold on
-plot(timeMat,betaVels(3,:),'b-')
-hold on
-plot(timeMat,betaVels(4,:),'c-')
-hold on
-grid on
-legend('Leg 1','Leg 2','Leg 3','Leg 4')
-grid on
-xlabel('time (s)')
-ylabel('Beta vel (rad/s)')
-title('Beta Velocities vs time')
-
-subplot(3,1,3)
-plot(timeMat,gammaVels(1,:),'r-')
-hold on
-plot(timeMat,gammaVels(2,:),'g-')
-hold on
-plot(timeMat,gammaVels(3,:),'b-')
-hold on
-plot(timeMat,gammaVels(4,:),'c-')
-hold on
-grid on
-legend('Leg 1','Leg 2','Leg 3','Leg 4')
-grid on
-xlabel('time (s)')
-ylabel('Gamma vel (rad/s)')
-title('Gamma Velocities vs time')
-saveas(jntVelFig,'Joint Velocities vs time turning.png')
+% % Foot and Body Trajectory
+% trajFig = figure('Name','Circle Trajectory with sin');
+% plot3(posF_g(1,:),posF_g(2,:),posF_g(3,:),'k-')
+% hold on
+% plot3(xb_g(1,:), yb_g(1,:),zb_g(1,:),'-r')
+% hold on
+% plot3(xb_g(2,:), yb_g(2,:),zb_g(2,:),'-g')
+% hold on
+% plot3(xb_g(3,:), yb_g(3,:),zb_g(3,:),'-b')
+% hold on
+% plot3(xb_g(4,:), yb_g(4,:),zb_g(4,:),'-c')
+% hold on
+% legend('Foot','Hip1','Hip2','Hip3','Hip4')
+% xlim([-8,8]);
+% ylim([-8,8]);
+% grid on
+% xlabel('x pos (in)')
+% ylabel('y pos (in)')
+% title('Circle Trajectory with sine wrt gnd')
+% saveas(trajFig,'Turning Trajectories.png')
+% 
+% %%
+% % Foot Positions and Velocities
+% foot6Fig = figure('Name','Foot Positions and Velocities wrt Gnd Turning');
+% subplot(3,2,1)
+% plot(timeMat,posF_g(1,:),'r-')
+% grid on
+% xlabel('time (s)')
+% ylabel('x pos (in)')
+% title('X pos vs time wrt gnd')
+% 
+% subplot(3,2,2)
+% plot(timeMat,velF_g(1,:),'r-')
+% grid on
+% xlabel('time (s)')
+% ylabel('dX vel (in/s)')
+% title('DX vel vs time wrt gnd')
+% 
+% subplot(3,2,3)
+% plot(timeMat,posF_g(2,:),'r-')
+% grid on
+% xlabel('time (s)')
+% ylabel('y pos (in)')
+% title('Y pos vs time wrt gnd')
+% 
+% subplot(3,2,4)
+% plot(timeMat,velF_g(2,:),'r-')
+% grid on
+% xlabel('time (s)')
+% ylabel('dy vel (in/s)')
+% title('DY vel vs time wrt gnd')
+% 
+% subplot(3,2,5)
+% plot(timeMat,posF_g(3,:),'r-')
+% grid on
+% xlabel('time (s)')
+% ylabel('z pos (in)')
+% title('Z pos vs time wrt gnd')
+% 
+% subplot(3,2,6)
+% plot(timeMat,velF_g(3,:),'r-')
+% grid on
+% xlabel('time (s)')
+% ylabel('dz vel (in/s)')
+% title('Dz vel vs time wrt gnd')
+% saveas(foot6Fig,'Turning Foot Pos and Vel.png')
+% 
+% 
+% %%
+% % Joint Positions and Velocities
+% jntPosFig = figure('Name','Joint Positions vs time turning');
+% subplot(3,1,1)
+% plot(timeMat,Alpha(1,:),'r-')
+% hold on
+% plot(timeMat,Alpha(2,:),'g-')
+% hold on
+% plot(timeMat,Alpha(3,:),'b-')
+% hold on
+% plot(timeMat,Alpha(4,:),'c-')
+% hold on
+% grid on
+% legend('Leg 1','Leg 2','Leg 3','Leg 4')
+% xlabel('time (s)')
+% ylabel('Alpha pos (rad)')
+% title('Alpha Positions vs time')
+% 
+% subplot(3,1,2)
+% plot(timeMat,Beta(1,:),'r-')
+% hold on
+% plot(timeMat,Beta(2,:),'g-')
+% hold on
+% plot(timeMat,Beta(3,:),'b-')
+% hold on
+% plot(timeMat,Beta(4,:),'c-')
+% hold on
+% grid on
+% legend('Leg 1','Leg 2','Leg 3','Leg 4')
+% grid on
+% xlabel('time (s)')
+% ylabel('Beta pos (rad)')
+% title('Beta Positions vs time')
+% 
+% subplot(3,1,3)
+% plot(timeMat,Gamma(1,:),'r-')
+% hold on
+% plot(timeMat,Gamma(2,:),'g-')
+% hold on
+% plot(timeMat,Gamma(3,:),'b-')
+% hold on
+% plot(timeMat,Gamma(4,:),'c-')
+% hold on
+% grid on
+% legend('Leg 1','Leg 2','Leg 3','Leg 4')
+% grid on
+% xlabel('time (s)')
+% ylabel('Gamma pos (rad/s)')
+% title('Gamma Positions vs time')
+% saveas(jntPosFig,'Joint Positions vs timeturning.png')
+% 
+% jntVelFig = figure('Name','Joint Velocities vs time turning');
+% subplot(3,1,1)
+% plot(timeMat,alphaVels(1,:),'r-')
+% hold on
+% plot(timeMat,alphaVels(2,:),'g-')
+% hold on
+% plot(timeMat,alphaVels(3,:),'b-')
+% hold on
+% plot(timeMat,alphaVels(4,:),'c-')
+% hold on
+% grid on
+% legend('Leg 1','Leg 2','Leg 3','Leg 4')
+% xlabel('time (s)')
+% ylabel('Alpha vel (rad/s)')
+% title('Alpha Velocities vs time')
+% 
+% subplot(3,1,2)
+% plot(timeMat,betaVels(1,:),'r-')
+% hold on
+% plot(timeMat,betaVels(2,:),'g-')
+% hold on
+% plot(timeMat,betaVels(3,:),'b-')
+% hold on
+% plot(timeMat,betaVels(4,:),'c-')
+% hold on
+% grid on
+% legend('Leg 1','Leg 2','Leg 3','Leg 4')
+% grid on
+% xlabel('time (s)')
+% ylabel('Beta vel (rad/s)')
+% title('Beta Velocities vs time')
+% 
+% subplot(3,1,3)
+% plot(timeMat,gammaVels(1,:),'r-')
+% hold on
+% plot(timeMat,gammaVels(2,:),'g-')
+% hold on
+% plot(timeMat,gammaVels(3,:),'b-')
+% hold on
+% plot(timeMat,gammaVels(4,:),'c-')
+% hold on
+% grid on
+% legend('Leg 1','Leg 2','Leg 3','Leg 4')
+% grid on
+% xlabel('time (s)')
+% ylabel('Gamma vel (rad/s)')
+% title('Gamma Velocities vs time')
+% saveas(jntVelFig,'Joint Velocities vs time turning.png')
 
 end
