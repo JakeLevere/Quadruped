@@ -1,0 +1,156 @@
+%% Simulink Parameters
+function [leg1_alpha, leg2_alpha, leg3_alpha, leg4_alpha, ...
+    leg1_beta, leg2_beta, leg3_beta, leg4_beta, ...
+    leg1_gamma, leg2_gamma, leg3_gamma, leg4_gamma,hip_length,shin_length,thigh_length] = ... 
+    Sim_Param_Tables_Turn(alphaDeg,betaDeg,gammaDeg,p,coxa,femur,tibia)
+%% "Given" Information
+% o = [0; 0; 6; 30; 0; 0];
+% 
+% % Simulink Model Parameters
+% rleg= 0.5;
+% 
+% % Constant Robot Parameters
+% shin_length = 5.7477;
+% thigh_length = 3.4638;
+% hip_length = 1.5374;
+% Constant Robot Parameters
+shin_length = tibia;
+thigh_length = femur;
+hip_length = coxa;
+% 
+% top_diam = 5.23;
+% bot_diam = top_diam+(2*(hip_length+thigh_length));
+% topR = top_diam/2;
+% botR = bot_diam/2;
+% 
+% theta1DegHome = 53.64;% degrees
+% theta2DegHome = 54.02;% degrees
+% alpha = 53.64 * ((2*pi)/360);
+% beta = 54.02 * ((2*pi)/360);
+% 
+% %% Find si and ui matrix
+% theta1RadHome = deg2rad(53.64);% radians
+% theta2RadHome = deg2rad(54.02);% radians
+% [s, u] = SandUVectors(topR, botR, theta1RadHome, theta1RadHome, false);
+% dist12 = abs(norm((s(:,1)) - (s(:,2))));
+% dist24 = abs(norm((s(:,2)) - (s(:,4))));
+% dist34 = abs(norm((s(:,3)) - (s(:,4))));
+% dist31 = abs(norm((s(:,3)) - (s(:,1))));
+% 
+% % U vector
+% u1 = u(:,1);
+% u2 = u(:,2);
+% u3 = u(:,3);
+% u4 = u(:,4);
+
+%% Create Angle ranges
+
+%{
+[alphai, betai, gammai, ~, ~, ~, ~] = InverseKinematicsParallelWalkingV2(o, true);
+
+ndivisions = 100;
+leg1_alpha = create_range(0, alphai(1), ndivisions, 10);
+leg1_beta = create_range(0, betai(1), ndivisions, 10);
+leg1_gamma = create_range(0, gammai(1)-90, ndivisions, 10);
+leg2_alpha = create_range(0, alphai(2), ndivisions, 10);
+leg2_beta = create_range(0, betai(2), ndivisions, 10);
+leg2_gamma = create_range(0, gammai(2)-90, ndivisions, 10);
+leg3_alpha = create_range(0, alphai(3), ndivisions, 10);
+leg3_beta = create_range(0, betai(3), ndivisions, 10);
+leg3_gamma = create_range(0, gammai(3)-90, ndivisions, 10);
+leg4_alpha =create_range(0, alphai(4), ndivisions, 10);
+leg4_beta = create_range(0, betai(4), ndivisions, 10);
+leg4_gamma = create_range(0, gammai(4)-90, ndivisions, 10);
+%}
+%{
+homePose = o;
+goalPose = [0; 0; 4; 0; 0; 0];
+isDeg = true;
+t0 = 0;
+tf = 4;
+tstep = 1;
+v0 = 0;
+vf = 0;
+Title = "Test";
+filename = "TestTrajectory";
+[allAlphai,allBetai,allGammai] = parallelMoveTrajectV1(homePose, goalPose,isDeg,t0,tf,tstep,v0,vf,Title,filename)
+%}
+
+time = linspace(0,1,16);
+alpha = zeros(4, length(time));
+beta = zeros(4, length(time));
+gamma = zeros(4, length(time));
+
+for i = 1:length(time)
+    t = time(i); % current time
+    if t>=0 && t<p(4)
+        alpha(4,i)= alphaDeg(4,i); beta(4,i) = betaDeg(4,i); gamma(4,i) = gammaDeg(4,i); %leg 4 moves
+        %alpha(2, i) = alphaDeg(2,1); 
+        beta(2, i) = betaDeg(2,1); gamma(2,i) = gammaDeg(3,1); %leg2 stationary
+        %alpha(3,i) = alphaDeg(3,1); 
+        beta(3,i) = betaDeg(3,1); gamma(3,i) = gammaDeg(3,1); %leg3 stationary
+        %alpha(1,i) = alphaDeg(1,1); 
+        beta(1, i) = betaDeg(1,1); gamma(1,i) = gammaDeg(1,1); %leg1 stationary
+    end
+    if t>p(4) && t<p(2) %leg 2 moves
+        alpha(2,i)= alphaDeg(2,i-4); beta(2,i) = betaDeg(2,i-4); gamma(2,i) = gammaDeg(2,i-4); %leg 2 moves
+        %alpha(4, i) = alphaDeg(4,end);
+        beta(4, i) = betaDeg(4,end); gamma(4,i) = gammaDeg(4,end); %leg4 stationary
+        %alpha(3,i) = alphaDeg(3,1); 
+        beta(3,i) = betaDeg(3,1); gamma(3,i) = gammaDeg(3,1); %leg3 stationary
+        %alpha(1,i) = alphaDeg(1,1); 
+        beta(1, i) = betaDeg(1,1); gamma(1,i) = gammaDeg(1,1); %leg1 stationary
+    end
+    
+    if t>p(2) && t<p(3) % leg 3 moves
+        
+        alpha(3,i)= alphaDeg(3,i-8); beta(3,i) = betaDeg(3,i-8); gamma(3,i) = gammaDeg(3,i-8); %leg 3 moves
+        %alpha(4, i) = alphaDeg(4,end);
+        beta(4, i) = betaDeg(4,end); gamma(4,i) = gammaDeg(4,end); %leg4 stationary
+        %alpha(2,i) = alphaDeg(2,end); 
+        beta(2,i) = betaDeg(2,end); gamma(2,i) = gammaDeg(2,end); %leg2 stationary
+        %alpha(1,i) = alphaDeg(1,1); 
+        beta(1, i) = betaDeg(1,1); gamma(1,i) = gammaDeg(1,1); %leg1 stationary
+        
+    end
+    
+    if t>p(3) && t<=time(end)% leg 1 moves
+        
+        alpha(1,i)= alphaDeg(1,i-12); beta(1,i) = betaDeg(1,i-12); gamma(1,i) = gammaDeg(1,i-12); %leg 1 moves
+        %alpha(4, i) = alphaDeg(4,end); 
+        beta(4, i) = betaDeg(4,end); gamma(4,i) = gammaDeg(4,end); %leg4 stationary
+        %alpha(2,i) = alphaDeg(2,end); 
+        beta(2,i) = betaDeg(2,end); gamma(2,i) = gammaDeg(2,end); %leg2 stationary
+        %alpha(3,i) = alphaDeg(3,end); 
+        beta(3, i) = betaDeg(3,end); gamma(3,i) = gammaDeg(3,end); %leg3 stationary
+        
+    end
+    
+end
+
+alpha(4,5:end) = linspace(alphaDeg(4,end), alphaDeg(4,1), 12);
+alpha(1,1:12) = linspace(alphaDeg(1,end), alphaDeg(1,1), 12);
+
+alpha2 = linspace(alphaDeg(2,end), alphaDeg(2,1), 12);
+alpha(2, 9:end) = alpha2(1:8);
+alpha(2, 1:4) = alpha2(end-3: end);
+
+alpha3 = linspace(alphaDeg(3,end), alphaDeg(3,1), 12);
+alpha(3, 13:end) = alpha3(1:4);
+alpha(3, 1:8) = alpha3(end-7: end);
+
+secondtime = seconds([time 1+time 2+time]);
+leg1_alpha = timetable([alpha(1,:).';alpha(1,:).';alpha(1,:).']-90, 'rowTimes', secondtime);
+leg2_alpha = timetable([alpha(2,:).'; alpha(2,:).';alpha(2,:).'], 'rowTimes', secondtime);
+leg3_alpha = timetable([alpha(3,:).'; alpha(3,:).';alpha(3,:).']+180, 'rowTimes', secondtime); %+90
+leg4_alpha = timetable([alpha(4,:).'; alpha(4,:).'; alpha(4,:).'], 'rowTimes', secondtime);
+
+leg1_beta = timetable([beta(1,:).';beta(1,:).';beta(1,:).'], 'rowTimes', secondtime);
+leg2_beta = timetable([beta(2,:).';beta(2,:).';beta(2,:).'], 'rowTimes', secondtime);
+leg3_beta = timetable([beta(3,:).';beta(3,:).';beta(3,:).'], 'rowTimes', secondtime);
+leg4_beta = timetable([beta(4,:).';beta(4,:).';beta(4,:).'], 'rowTimes', secondtime);
+
+leg1_gamma = timetable([gamma(1,:).';gamma(1,:).';gamma(1,:).']-90, 'rowTimes', secondtime);
+leg2_gamma = timetable([gamma(2,:).';gamma(2,:).';gamma(2,:).']-90, 'rowTimes', secondtime);
+leg3_gamma = timetable([gamma(3,:).';gamma(3,:).';gamma(3,:).']-90, 'rowTimes', secondtime);
+leg4_gamma = timetable([gamma(4,:).';gamma(4,:).';gamma(4,:).']-90, 'rowTimes', secondtime);
