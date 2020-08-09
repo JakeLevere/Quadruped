@@ -31,10 +31,10 @@ dist34 = abs(norm((s(:,3)) - (s(:,4))));
 dist31 = abs(norm((s(:,3)) - (s(:,1))));
 
 % U vector
-u1 = u(:,1);
-u2 = u(:,2);
-u3 = u(:,3);
-u4 = u(:,4);
+%u1 = u(:,1);
+%u2 = u(:,2);
+%u3 = u(:,3);
+%u4 = u(:,4);
 
 %% Create Angle ranges
 

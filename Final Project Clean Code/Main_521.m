@@ -91,10 +91,10 @@ simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 pause(10);
 
 % Twisting - Matlab and Simulink
-randSetPoint1 = [0;2;5;-5;5;-45];
-randSetPoint2 = [1;0.5;4.9;0;0;45];
-randSetPoint3 = [2.5;0;6;-15;25;0];
-[randPt1Alpha,randPt1Beta,randPt1Gamma] = parallelMoveTrajectV1(homePose, randSetPoint1,isDeg,t0,tf,tstep,v0,vf,'Home to [0;2;5;-5;5;-45]','Home to randSetPoint1.gif')
+randSetPoint1 = [0;0;5;8;8;0];
+randSetPoint2 = [2;0;6;0;0;5];
+randSetPoint3 = [0;0;8;8;0;0];
+[randPt1Alpha,randPt1Beta,randPt1Gamma] = parallelMoveTrajectV1(homePose, randSetPoint1,isDeg,t0,tf,tstep,v0,vf,'Home to [0;0;5;8;8;0]','Home to randSetPoint1.gif')
 
 [leg1_alpha,leg2_alpha,leg3_alpha,leg4_alpha,...
     leg1_beta,leg2_beta,leg3_beta,leg4_beta,...
@@ -103,7 +103,7 @@ randSetPoint3 = [2.5;0;6;-15;25;0];
 simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 pause(10);
 
-[randPt2Alpha,randPt2Beta,randPt2Gamma] = parallelMoveTrajectV1(homePose, randSetPoint2,isDeg,t0,tf,tstep,v0,vf,'Home to [1;0.5;4.9;0;0;45]','Home to randSetPoint2.gif')
+[randPt2Alpha,randPt2Beta,randPt2Gamma] = parallelMoveTrajectV1(homePose, randSetPoint2,isDeg,t0,tf,tstep,v0,vf,'Home to [2;0;6;0;0;5]','Home to randSetPoint2.gif')
 
 [leg1_alpha,leg2_alpha,leg3_alpha,leg4_alpha,...
     leg1_beta,leg2_beta,leg3_beta,leg4_beta,...
@@ -112,7 +112,7 @@ pause(10);
 simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 pause(10);
 
-[randPt3Alpha,randPt3Beta,randPt3Gamma] = parallelMoveTrajectV1(homePose, randSetPoint3,isDeg,t0,tf,tstep,v0,vf,'Home to [2.5;0;6;-15;25;0]','Home to randSetPoint3.gif')
+[randPt3Alpha,randPt3Beta,randPt3Gamma] = parallelMoveTrajectV1(homePose, randSetPoint3,isDeg,t0,tf,tstep,v0,vf,'Home to [0;0;8;3;0;0]','Home to randSetPoint3.gif')
 
 [leg1_alpha,leg2_alpha,leg3_alpha,leg4_alpha,...
     leg1_beta,leg2_beta,leg3_beta,leg4_beta,...
@@ -120,6 +120,7 @@ pause(10);
 
 simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 pause(10);
+
 
 %% Walking Simulation Constants/Variables
 beta = 0.75; % duty factor
