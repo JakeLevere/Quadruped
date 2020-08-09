@@ -112,7 +112,7 @@ pause(10);
 simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 pause(10);
 
-[randPt3Alpha,randPt3Beta,randPt3Gamma] = parallelMoveTrajectV1(homePose, randSetPoint3,isDeg,t0,tf,tstep,v0,vf,'Home to [0;0;8;3;0;0]','Home to randSetPoint3.gif')
+[randPt3Alpha,randPt3Beta,randPt3Gamma] = parallelMoveTrajectV1(homePose, randSetPoint3,isDeg,t0,tf,tstep,v0,vf,'Home to [0;0;8;8;0;0]','Home to randSetPoint3.gif')
 
 [leg1_alpha,leg2_alpha,leg3_alpha,leg4_alpha,...
     leg1_beta,leg2_beta,leg3_beta,leg4_beta,...
