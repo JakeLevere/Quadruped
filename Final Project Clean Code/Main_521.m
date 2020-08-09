@@ -92,7 +92,7 @@ pause(10);
 
 % Twisting - Matlab and Simulink
 randSetPoint1 = [0;0;5;8;8;0];
-randSetPoint2 = [2;0;6;0;0;5];
+randSetPoint2 = [1;0.5;4.9;0;0;8];
 randSetPoint3 = [0;0;8;8;0;0];
 [randPt1Alpha,randPt1Beta,randPt1Gamma] = parallelMoveTrajectV1(homePose, randSetPoint1,isDeg,t0,tf,tstep,v0,vf,'Home to [0;0;5;8;8;0]','Home to randSetPoint1.gif')
 
@@ -103,7 +103,7 @@ randSetPoint3 = [0;0;8;8;0;0];
 simOut = sim('Quadruped_Simulink_Parallel','ReturnWorkspaceOutputs','on');
 pause(10);
 
-[randPt2Alpha,randPt2Beta,randPt2Gamma] = parallelMoveTrajectV1(homePose, randSetPoint2,isDeg,t0,tf,tstep,v0,vf,'Home to [2;0;6;0;0;5]','Home to randSetPoint2.gif')
+[randPt2Alpha,randPt2Beta,randPt2Gamma] = parallelMoveTrajectV1(homePose, randSetPoint2,isDeg,t0,tf,tstep,v0,vf,'Home to [1;0.5;4.9;0;0;8]','Home to randSetPoint2.gif')
 
 [leg1_alpha,leg2_alpha,leg3_alpha,leg4_alpha,...
     leg1_beta,leg2_beta,leg3_beta,leg4_beta,...
